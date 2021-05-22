@@ -1,3 +1,4 @@
+from todo_app.data.session_items import get_items
 from flask import Flask
 from flask import render_template
 
@@ -9,7 +10,10 @@ app.config.from_object(Config)
 
 @app.route('/')
 def index():
-    return render_template('index.html') 
+    items = get_items()
+    for i in get_items():
+        print(i)
+    return render_template('index.html', items=items) 
 
 
 if __name__ == '__main__':
