@@ -16,5 +16,22 @@
         {% endfor %}
       </ul>
     </div>
+  </div>  
+  
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Add New Item</h2>
+      <form action="/items" method="POST" class="form-example">
+        <div class="form-example">
+          <label for="title">Enter the Title: </label>
+          <input type="text" name="title" id="title" required>
+        </div>
+        <div class="form-example">
+          <input type="submit" value="Save">
+        </div>
+      </form>
+    </div>
   </div>
+
+  
 {% endblock %}
