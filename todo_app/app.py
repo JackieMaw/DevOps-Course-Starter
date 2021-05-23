@@ -16,7 +16,7 @@ app.config.from_object(Config)
 @app.route('/')
 def index():
     print("index()")
-    items = get_items()
+    items = sorted(get_items(), key=lambda item: item["status"], reverse=True)
     for i in get_items():
         print(i)
     return render_template('index.html', items=items) 
