@@ -22,21 +22,17 @@
       </ul>
     </div>
   </div>  
-  
+
   <div class="row">
     <div class="col-md-12">
       <h2>Add New Item</h2>
-      <form action="/items" method="POST" class="form-example">
-        <div class="form-example">
-          <label for="title">Enter the Title: </label>
-          <input type="text" name="title" id="title" required>
+      <form action="/items" method="POST" class="form-group">
+        <div class="form-group">
+          <input type="text" class="form-control" name="title" id="title" aria-describedby="titleHelp" placeholder="Title">
         </div>
-        <div class="form-example">
-          <input type="submit" value="Save">
-        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
   </div>
-
   
 {% endblock %}
