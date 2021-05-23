@@ -1,5 +1,5 @@
 from werkzeug.utils import redirect
-from todo_app.data.session_items import get_items
+from todo_app.data.session_items import delete_item, get_items
 from todo_app.data.session_items import add_item
 from todo_app.data.session_items import get_item
 from todo_app.data.session_items import save_item
@@ -38,6 +38,17 @@ def mark_as_done(itemId):
     save_item(item)
     # HELP: how to redirect back to index
     return index()
+
+@app.route('/delete/<itemId>') 
+def delete(itemId): 
+    try:
+        print(f"delete: itemId = {itemId}")
+        delete_item(itemId)        
+    except Exception as error:
+        print(f"Exception: {error}")
+    finally:
+        # HELP: how to redirect back to index
+        return index()
 
 if __name__ == '__main__':
     app.run()
