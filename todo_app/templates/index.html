@@ -12,7 +12,12 @@
       <h2>Items</h2>
       <ul class="list-group mb-4">
         {% for item in items %}
-          <li> [{{ item.id }}] {{ item.title }} - {{ item.status }} </li>
+          <li> [{{ item.id }}] {{ item.title }} - {{ item.status }} 
+              {% if item.status != "Done" %}
+                <a href="{{ url_for('mark_as_done', itemId=item.id) }}">Done</a>              
+              {% endif %}
+              <a href="{{ url_for('delete', itemId=item.id) }}">Delete</a> 
+            </li>
         {% endfor %}
       </ul>
     </div>
