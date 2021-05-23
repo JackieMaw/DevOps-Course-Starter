@@ -1,6 +1,8 @@
 from werkzeug.utils import redirect
 from todo_app.data.session_items import get_items
 from todo_app.data.session_items import add_item
+from todo_app.data.session_items import get_item
+from todo_app.data.session_items import save_item
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -26,10 +28,16 @@ def add_new_item():
     print(title)
     add_item(title)
     # HELP: how to redirect back to index
-    items = get_items()
-    for i in get_items():
-        print(i)
-    return render_template('index.html', items=items) 
+    return index()
+
+@app.route('/mark_as_done/<itemId>') 
+def mark_as_done(itemId): 
+    print(f"mark_as_done: itemId = {itemId}")
+    item = get_item(itemId)
+    item["status"] = "Done"
+    save_item(item)
+    # HELP: how to redirect back to index
+    return index()
 
 if __name__ == '__main__':
     app.run()
