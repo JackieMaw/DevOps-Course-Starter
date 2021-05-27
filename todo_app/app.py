@@ -27,8 +27,7 @@ def add_new_item():
     title = request.form['title']
     print(title)
     add_item(title)
-    # HELP: how to redirect back to index
-    return index()
+    return redirect('/')
 
 @app.route('/mark_as_done/<itemId>') 
 def mark_as_done(itemId): 
@@ -36,8 +35,7 @@ def mark_as_done(itemId):
     item = get_item(itemId)
     item["status"] = "Done"
     save_item(item)
-    # HELP: how to redirect back to index
-    return index()
+    return redirect('/')
 
 @app.route('/delete/<itemId>') 
 def delete(itemId): 
@@ -47,8 +45,7 @@ def delete(itemId):
     except Exception as error:
         print(f"Exception: {error}")
     finally:
-        # HELP: how to redirect back to index
-        return index()
+        return redirect('/')
 
 if __name__ == '__main__':
     app.run()
