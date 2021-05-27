@@ -1,11 +1,5 @@
-from werkzeug.utils import redirect
-from todo_app.data.session_items import delete_item, get_items
-from todo_app.data.session_items import add_item
-from todo_app.data.session_items import get_item
-from todo_app.data.session_items import save_item
-from flask import Flask
-from flask import render_template
-from flask import request
+from flask import Flask, render_template, request, redirect
+from todo_app.data.session_items import delete_item, get_items, save_item, add_item, get_item
 
 from todo_app.flask_config import Config
 
