@@ -29,7 +29,7 @@ def add_new_item():
     add_item(title)
     return redirect('/')
 
-@app.route('/mark_as_done/<itemId>') 
+@app.route('/mark_as_done/<itemId>', methods=['POST']) 
 def mark_as_done(itemId): 
     print(f"mark_as_done: itemId = {itemId}")
     item = get_item(itemId)
@@ -37,7 +37,7 @@ def mark_as_done(itemId):
     save_item(item)
     return redirect('/')
 
-@app.route('/delete/<itemId>') 
+@app.route('/delete/<itemId>', methods=['POST']) 
 def delete(itemId): 
     try:
         print(f"delete: itemId = {itemId}")
