@@ -1,4 +1,4 @@
-from todo_app.trello_wrapper import fake_trello_wrapper
+from todo_app.trello_wrapper import fake_trello_wrapper, real_trello_wrapper
 from flask import Flask, render_template, request, redirect
 from todo_app.data.session_items import delete_item, get_items, save_item, add_item, get_item
 
