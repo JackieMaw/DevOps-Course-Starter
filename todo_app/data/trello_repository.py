@@ -1,7 +1,33 @@
+from todo_app.data.trello_wrapper import fake_trello_wrapper, real_trello_wrapper, trello_wrapper
+
 class trello_repository:
+    wrapper = fake_trello_wrapper()
+
+    def __init__(self):
+        self.boardId = None
+        self.lists = None
 
     def get_items(self):
-        return session.get('items', _DEFAULT_ITEMS.copy())
+
+        if (self.boardId is None):
+            allBoards = trello_repository.wrapper.getAllBoards()
+            self.boardId = allBoards[0]["id"]
+
+        if (self.lists is None):
+            allLists = trello_repository.wrapper.getAllLists(self.boardId)
+            keyValuePairs = [(list["id"], list["name"]) for list in allLists]
+            self.lists = {key: value for (key, value) in keyValuePairs}
+
+        allCards = trello_repository.wrapper.getAllCards(self.boardId)
+        allItems = [self.__transform_card_to_item(card) for card in allCards]
+
+        return allItems
+
+    def __transform_card_to_item(self, card):
+        return { "id": card["id"], "title": card["name"], "status": self.__get_status(card["idList"])}
+
+    def __get_status(self, idList):
+        return self.lists[idList]
 
     def get_item(self, id):
         items = self.get_items()

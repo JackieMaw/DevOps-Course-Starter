@@ -1,12 +1,12 @@
-from todo_app.data.trello_wrapper import fake_trello_wrapper, real_trello_wrapper
 from flask import Flask, render_template, request, redirect
 from todo_app.data.session_repository import session_repository
+from todo_app.data.trello_repository import trello_repository
 
 from todo_app.flask_config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
-repository = session_repository()
+repository = trello_repository()
 
 
 @app.route('/')
