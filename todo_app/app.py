@@ -1,3 +1,4 @@
+from todo_app.trello_wrapper import fake_trello_wrapper
 from flask import Flask, render_template, request, redirect
 from todo_app.data.session_items import delete_item, get_items, save_item, add_item, get_item
 
@@ -13,6 +14,12 @@ def index():
     items = sorted(get_items(), key=lambda item: item["status"], reverse=True)
     for i in get_items():
         print(i)
+
+    trello = fake_trello_wrapper()
+    print(trello.getAllBoards())
+    print(trello.getAllCards())
+    print(trello.getAllLists())
+
     return render_template('index.html', items=items) 
 
 @app.route('/items', methods=['POST'])
