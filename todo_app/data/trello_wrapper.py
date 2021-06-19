@@ -4,19 +4,19 @@ import requests
 
 class trello_wrapper:        
     @abstractmethod 
-    def getAllBoards(self):
+    def get_all_boards(self):
         pass
        
     @abstractmethod 
-    def getAllCards(self):
+    def get_all_cards(self):
         pass
        
     @abstractmethod 
-    def getAllLists(self):
+    def get_all_lists(self):
         pass
 
 class fake_trello_wrapper(trello_wrapper):   
-    def getAllBoards(self):
+    def get_all_boards(self):
         #https://api.trello.com/1/members/me/boards?fields=name,url&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         return json.loads("""
 [
@@ -27,7 +27,7 @@ class fake_trello_wrapper(trello_wrapper):
     }
 ]""")
        
-    def getAllCards(self, boardId):
+    def get_all_cards(self, boardId):
         #https://api.trello.com/1/boards/60cc9c9354703a81f8f3ecbe/cards?fields=name,idList&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         return json.loads("""
 [
@@ -53,7 +53,7 @@ class fake_trello_wrapper(trello_wrapper):
     }
 ]""")
        
-    def getAllLists(self, boardId):
+    def get_all_lists(self, boardId):
         #https://api.trello.com/1/boards/60cc9c9354703a81f8f3ecbe/lists?fields=name&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         return json.loads("""
 [
@@ -75,7 +75,7 @@ class real_trello_wrapper(trello_wrapper):
     key = "b4b0f437afe756ad8944b7aedfbe3cf4"
     token = "946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829"
 
-    def getAllBoards(self):
+    def get_all_boards(self):
         #https://api.trello.com/1/members/me/boards?fields=name,url&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         payload = {'fields': "name,url", 'key': self.key, 'token' : self.token}
         r = requests.get(f"https://api.trello.com/1/members/me/boards", payload)
@@ -83,7 +83,7 @@ class real_trello_wrapper(trello_wrapper):
         print(r.status_code)
         return r.json()
        
-    def getAllCards(self, boardId):
+    def get_all_cards(self, boardId):
         #https://api.trello.com/1/boards/60cc9c9354703a81f8f3ecbe/cards?fields=name,idList&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         payload = {'fields': "name,idList", 'key': self.key, 'token' : self.token}
         r = requests.get(f"https://api.trello.com/1/boards/{boardId}/cards", payload)
@@ -91,10 +91,17 @@ class real_trello_wrapper(trello_wrapper):
         print(r.status_code)
         return r.json()
        
-    def getAllLists(self, boardId):
+    def get_all_lists(self, boardId):
         #https://api.trello.com/1/boards/60cc9c9354703a81f8f3ecbe/lists?fields=name&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         payload = {'fields': "name", 'key': self.key, 'token' : self.token}
         r = requests.get(f"https://api.trello.com/1/boards/{boardId}/lists", payload)
         print(r.url)
         print(r.status_code)
         return r.json()
+
+    def update_list_on_card(self, cardId, listId):
+        #PUT /1/cards/{cardID}?idList={listID}
+        payload = {'idList': listId, 'key': self.key, 'token' : self.token}
+        r = requests.put(f"https://api.trello.com/1/cards/{cardId}", payload)
+        print(r.url)
+        print(r.status_code)

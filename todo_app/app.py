@@ -28,9 +28,7 @@ def add_new_item():
 @app.route('/mark_as_done/<itemId>', methods=['POST']) 
 def mark_as_done(itemId): 
     print(f"mark_as_done: itemId = {itemId}")
-    item = repository.get_item(itemId)
-    item["status"] = "Done"
-    repository.save_item(item)
+    repository.update_item_status(itemId, "Done")
     return redirect('/')
 
 @app.route('/delete/<itemId>', methods=['POST']) 

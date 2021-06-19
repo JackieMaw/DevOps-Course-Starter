@@ -1,24 +1,32 @@
 from todo_app.data.trello_wrapper import fake_trello_wrapper, real_trello_wrapper, trello_wrapper
 
 class trello_repository:
-    wrapper = fake_trello_wrapper()
+    wrapper = real_trello_wrapper()
 
     def __init__(self):
         self.boardId = None
         self.lists = None
 
+    def get_boardId(self):
+        if (self.boardId is None):
+            allBoards = trello_repository.wrapper.get_all_boards()
+            self.boardId = allBoards[0]["id"]
+        return self.boardId
+
+    def get_lists(self):
+        if (self.lists is None):
+            allLists = trello_repository.wrapper.get_all_lists(self.boardId)
+            #keyValuePairs = [(list["id"], list["name"]) for list in allLists]
+            #self.lists = {key: value for (key, value) in keyValuePairs}
+            self.lists = dict([(list["id"], list["name"]) for list in allLists])
+        return self.lists
+
     def get_items(self):
 
-        if (self.boardId is None):
-            allBoards = trello_repository.wrapper.getAllBoards()
-            self.boardId = allBoards[0]["id"]
+        self.get_boardId()
+        self.get_lists()
 
-        if (self.lists is None):
-            allLists = trello_repository.wrapper.getAllLists(self.boardId)
-            keyValuePairs = [(list["id"], list["name"]) for list in allLists]
-            self.lists = {key: value for (key, value) in keyValuePairs}
-
-        allCards = trello_repository.wrapper.getAllCards(self.boardId)
+        allCards = trello_repository.wrapper.get_all_cards(self.get_boardId())
         allItems = [self.__transform_card_to_item(card) for card in allCards]
 
         return allItems
@@ -32,6 +40,11 @@ class trello_repository:
     def get_item(self, id):
         items = self.get_items()
         return next((item for item in items if item['id'] == int(id)), None)
+
+    def update_item_status(self, id, newStatus):
+        for listId, listName in self.get_lists().items():
+            if listName == newStatus:
+                trello_repository.wrapper.update_list_on_card(id, listId)        
 
     def add_item(self, title):
         items = self.get_items()
