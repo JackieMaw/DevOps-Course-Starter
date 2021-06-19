@@ -22,24 +22,21 @@ def add_new_item():
     print("add_new_item")
     title = request.form['title']
     print(title)
-    repository.add_item(title)
+    repository.add_item(title, "To Do")
     return redirect('/')
 
-@app.route('/mark_as_done/<itemId>', methods=['POST']) 
+@app.route('/change_status/<itemId>', methods=['POST']) 
 def mark_as_done(itemId): 
-    print(f"mark_as_done: itemId = {itemId}")
-    repository.update_item_status(itemId, "Done")
+    status = request.form['status']
+    print(f"mark_as_done: itemId = {itemId}, status = {status}")
+    repository.update_item_status(itemId, status)
     return redirect('/')
 
 @app.route('/delete/<itemId>', methods=['POST']) 
 def delete(itemId): 
-    try:
-        print(f"delete: itemId = {itemId}")
-        repository.delete_item(itemId)        
-    except Exception as error:
-        print(f"Exception: {error}")
-    finally:
-        return redirect('/')
+    print(f"delete: itemId = {itemId}")
+    repository.delete_item(itemId)  
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run()

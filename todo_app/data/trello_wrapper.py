@@ -1,8 +1,9 @@
 from abc import abstractmethod
 import json
 import requests
+from requests.api import request
 
-class trello_wrapper:        
+class trelllo_request_handler:        
     @abstractmethod 
     def get_all_boards(self):
         pass
@@ -15,7 +16,7 @@ class trello_wrapper:
     def get_all_lists(self):
         pass
 
-class fake_trello_wrapper(trello_wrapper):   
+class fake_trelllo_request_handler(trelllo_request_handler):   
     def get_all_boards(self):
         #https://api.trello.com/1/members/me/boards?fields=name,url&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         return json.loads("""
@@ -71,7 +72,7 @@ class fake_trello_wrapper(trello_wrapper):
     }
 ]""")
 
-class real_trello_wrapper(trello_wrapper):          
+class real_trelllo_request_handler(trelllo_request_handler):          
     key = "b4b0f437afe756ad8944b7aedfbe3cf4"
     token = "946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829"
 
@@ -103,5 +104,21 @@ class real_trello_wrapper(trello_wrapper):
         #PUT /1/cards/{cardID}?idList={listID}
         payload = {'idList': listId, 'key': self.key, 'token' : self.token}
         r = requests.put(f"https://api.trello.com/1/cards/{cardId}", payload)
+        print(r.url)
+        print(r.status_code)
+
+    def add_new_card(self, cardName, listId):
+        #POST /1/cards?name={name}&idList={listID}
+        payload = {'name': cardName, 'idList': listId, 'key': self.key, 'token' : self.token}
+        r = requests.post(f"https://api.trello.com/1/cards", payload)
+        print(r.url)
+        print(r.status_code)
+
+    def delete_card(self, cardId):
+        #DELETE /1/cards/{cardID}
+        #payload = {'key': self.key, 'token' : self.token}
+        #r = requests.delete(f"https://api.trello.com/1/cards/{cardId}", payload)
+        #r = requests.request("DELETE", f"https://api.trello.com/1/cards/{cardId}", payload)
+        r = requests.delete(f"https://api.trello.com/1/cards/{cardId}?key={self.key}&token={self.token}")
         print(r.url)
         print(r.status_code)

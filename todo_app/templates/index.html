@@ -19,18 +19,16 @@
               <p class="card-text">{{ item.status }}</p>
             </div>
             <div class="card-body">
-              {% if item.status != "Done" %}
-
-                <!--<a class="card-link" href="{{ url_for('mark_as_done', itemId=item.id) }}">Done</a>   -->
-                
-                <form action="/mark_as_done/{{item.id}}" method="POST" class="form-group">
-                    <button type="submit" class="btn btn-primary">Mark as Done</button>
+              {% if item.status == "To Do" %}                
+                <form action="/change_status/{{item.id}}?status=Doing" method="POST" class="form-group">
+                    <button type="submit" class="btn btn-primary">>> Doing</button>
                 </form>
-
               {% endif %}
-
-              <!--<a class="card-link" href="{{ url_for('delete', itemId=item.id) }}">Delete</a> -->
-
+              {% if item.status == "Doing" %}                
+                <form action="/change_status/{{item.id}}?status=Done" method="POST" class="form-group">
+                    <button type="submit" class="btn btn-primary">>> Done</button>
+                </form>
+              {% endif %}
               <form action="/delete/{{item.id}}" method="POST" class="form-group">
                 <button type="submit" class="btn btn-primary">Delete</button>
               </form>
