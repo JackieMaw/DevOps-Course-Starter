@@ -27,7 +27,7 @@ def add_new_item():
 
 @app.route('/change_status/<itemId>', methods=['POST']) 
 def mark_as_done(itemId): 
-    status = request.form['status']
+    status = request.args["status"]
     print(f"mark_as_done: itemId = {itemId}, status = {status}")
     repository.update_item_status(itemId, status)
     return redirect('/')
