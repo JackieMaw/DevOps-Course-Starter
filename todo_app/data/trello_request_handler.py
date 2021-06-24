@@ -1,9 +1,8 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 import json
 import requests
-from requests.api import request
 
-class trelllo_request_handler:        
+class trello_request_handler(ABC):        
     @abstractmethod 
     def get_all_boards(self):
         pass
@@ -16,7 +15,19 @@ class trelllo_request_handler:
     def get_all_lists(self):
         pass
 
-class fake_trelllo_request_handler(trelllo_request_handler):   
+    @abstractmethod 
+    def update_list_on_card(self, cardId, listId):
+        pass
+
+    @abstractmethod 
+    def add_new_card(self, cardName, listId):
+        pass
+
+    @abstractmethod
+    def delete_card(self, cardId):
+        pass
+
+class fake_trelllo_request_handler(trello_request_handler):   
     def get_all_boards(self):
         #https://api.trello.com/1/members/me/boards?fields=name,url&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         return json.loads("""
@@ -72,9 +83,13 @@ class fake_trelllo_request_handler(trelllo_request_handler):
     }
 ]""")
 
-class real_trelllo_request_handler(trelllo_request_handler):          
-    key = "b4b0f437afe756ad8944b7aedfbe3cf4"
-    token = "946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829"
+class real_trello_request_handler(trello_request_handler):
+
+    def __init__(self, key, token, workspace_name) -> None:
+        self.key = key
+        self.token = token
+        self.workspace_name = workspace_name
+        super().__init__()
 
     def get_all_boards(self):
         #https://api.trello.com/1/members/me/boards?fields=name,url&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
@@ -117,8 +132,6 @@ class real_trelllo_request_handler(trelllo_request_handler):
     def delete_card(self, cardId):
         #DELETE /1/cards/{cardID}
         #payload = {'key': self.key, 'token' : self.token}
-        #r = requests.delete(f"https://api.trello.com/1/cards/{cardId}", payload)
-        #r = requests.request("DELETE", f"https://api.trello.com/1/cards/{cardId}", payload)
         r = requests.delete(f"https://api.trello.com/1/cards/{cardId}?key={self.key}&token={self.token}")
         print(r.url)
         print(r.status_code)

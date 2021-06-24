@@ -1,13 +1,24 @@
 from flask import Flask, render_template, request, redirect
 from todo_app.data.session_repository import session_repository
 from todo_app.data.trello_repository import trello_repository
-
 from todo_app.flask_config import Config
+import os
+from dotenv import load_dotenv
+
+def init_repository():        
+    load_dotenv()    
+    repository = os.getenv('REPOSITORY')
+    if repository == 'trello':
+        key = os.getenv('TRELLO_KEY')
+        token = os.getenv('TRELLO_TOKEN')
+        workspace_name = os.getenv('TRELLO_WORKSPACE_NAME')
+        return trello_repository(key, token, workspace_name)
+    else:
+        return session_repository()
 
 app = Flask(__name__)
 app.config.from_object(Config)
-repository = trello_repository()
-
+repository = init_repository()
 
 @app.route('/')
 def index():
@@ -25,17 +36,17 @@ def add_new_item():
     repository.add_item(title, "To Do")
     return redirect('/')
 
-@app.route('/change_status/<itemId>', methods=['POST']) 
-def mark_as_done(itemId): 
+@app.route('/change_status/<id>', methods=['POST']) 
+def change_status(id): 
     status = request.args["status"]
-    print(f"mark_as_done: itemId = {itemId}, status = {status}")
-    repository.update_item_status(itemId, status)
+    print(f"mark_as_done: id = {id}, status = {status}")
+    repository.update_item_status(int(id), status)
     return redirect('/')
 
-@app.route('/delete/<itemId>', methods=['POST']) 
-def delete(itemId): 
-    print(f"delete: itemId = {itemId}")
-    repository.delete_item(itemId)  
+@app.route('/delete/<id>', methods=['POST']) 
+def delete(id): 
+    print(f"delete: id = {id}")
+    repository.delete_item(id)  
     return redirect('/')
 
 if __name__ == '__main__':

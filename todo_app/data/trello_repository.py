@@ -1,23 +1,21 @@
-from todo_app.data.trello_wrapper import real_trelllo_request_handler
+from todo_app.data.trello_request_handler import real_trello_request_handler
 
 class trello_repository:
-    trello_request_handler = real_trelllo_request_handler()
 
-    def __init__(self):
+    def __init__(self, key, token, workspace_name):
         self.boardId = None
         self.lists = None
+        self.request_handler = real_trello_request_handler(key, token, workspace_name)
 
     def get_boardId(self):
         if (self.boardId is None):
-            allBoards = trello_repository.trello_request_handler.get_all_boards()
+            allBoards = self.request_handler.get_all_boards()
             self.boardId = allBoards[0]["id"]
         return self.boardId
 
     def get_lists(self):
         if (self.lists is None):
-            allLists = trello_repository.trello_request_handler.get_all_lists(self.boardId)
-            #keyValuePairs = [(list["id"], list["name"]) for list in allLists]
-            #self.lists = {key: value for (key, value) in keyValuePairs}
+            allLists = self.request_handler.get_all_lists(self.get_boardId())
             self.lists = dict([(list["id"], list["name"]) for list in allLists])
         return self.lists
 
@@ -26,7 +24,7 @@ class trello_repository:
         self.get_boardId()
         self.get_lists()
 
-        allCards = trello_repository.trello_request_handler.get_all_cards(self.get_boardId())
+        allCards = self.request_handler.get_all_cards(self.get_boardId())
         allItems = [self.__transform_card_to_item(card) for card in allCards]
 
         return allItems
@@ -49,11 +47,11 @@ class trello_repository:
 
     def update_item_status(self, id, newStatus):
         listId = self.get_listId_for_status(newStatus)
-        trello_repository.trello_request_handler.update_list_on_card(id, listId)        
+        self.request_handler.update_list_on_card(id, listId)        
 
     def add_item(self, itemName, status):
         listId = self.get_listId_for_status(status)
-        trello_repository.trello_request_handler.add_new_card(itemName, listId)
+        self.request_handler.add_new_card(itemName, listId)
 
     def delete_item(self, id):
-        trello_repository.trello_request_handler.delete_card(id)
+        self.request_handler.delete_card(id)
