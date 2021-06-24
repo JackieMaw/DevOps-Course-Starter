@@ -1,4 +1,5 @@
 from todo_app.data.trello_request_handler import real_trello_request_handler
+from todo_app.data.task import task
 
 class trello_repository:
 
@@ -19,39 +20,35 @@ class trello_repository:
             self.lists = dict([(list["id"], list["name"]) for list in allLists])
         return self.lists
 
-    def get_items(self):
+    def get_tasks(self):
 
         self.get_boardId()
         self.get_lists()
 
         allCards = self.request_handler.get_all_cards(self.get_boardId())
-        allItems = [self.__transform_card_to_item(card) for card in allCards]
+        alltasks = [self.__transform_card_to_task(card) for card in allCards]
 
-        return allItems
+        return alltasks
 
-    def __transform_card_to_item(self, card):
-        return { "id": card["id"], "title": card["name"], "status": self.__get_status(card["idList"])}
+    def __transform_card_to_task(self, card):
+        return task(card["id"], card["name"], self.__get_status(card["idList"]))
 
     def __get_status(self, idList):
         return self.lists[idList]
 
-    def get_item(self, id):
-        items = self.get_items()
-        return next((item for item in items if item['id'] == int(id)), None)
-
     def get_listId_for_status(self, status):
-        for listId, listName in self.get_lists().items():
+        for listId, listName in self.get_lists().tasks():
             if listName == status:
                 return listId
         return None
 
-    def update_item_status(self, id, newStatus):
+    def update_task_status(self, id, newStatus):
         listId = self.get_listId_for_status(newStatus)
         self.request_handler.update_list_on_card(id, listId)        
 
-    def add_item(self, itemName, status):
+    def add_task(self, taskName, status):
         listId = self.get_listId_for_status(status)
-        self.request_handler.add_new_card(itemName, listId)
+        self.request_handler.add_new_card(taskName, listId)
 
-    def delete_item(self, id):
+    def delete_task(self, id):
         self.request_handler.delete_card(id)

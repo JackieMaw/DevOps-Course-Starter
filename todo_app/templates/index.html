@@ -9,27 +9,27 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h2>Items</h2>
-        {% for item in items %}
+      <h2>tasks</h2>
+        {% for task in tasks %}
           <div class="card" style="width: 18rem;">
             <!--<img src="https://via.placeholder.com/300" class="card-img-top" alt="A placeholder image">-->
             <div class="card-body">
-              <h5 class="card-title">{{ item.title }}</h5>
-              <p class="card-text">[{{ item.id }}]</p>
-              <p class="card-text">{{ item.status }}</p>
+              <h5 class="card-title">{{ task.title }}</h5>
+              <p class="card-text">[{{ task.id }}]</p>
+              <p class="card-text">{{ task.status }}</p>
             </div>
             <div class="card-body">
-              {% if item.status == "To Do" %}                
-                <form action="/change_status/{{item.id}}?status=Doing" method="POST" class="form-group">
+              {% if task.status == "To Do" %}                
+                <form action="/change_status/{{task.id}}?status=Doing" method="POST" class="form-group">
                     <button type="submit" class="btn btn-primary">>> Doing</button>
                 </form>
               {% endif %}
-              {% if item.status == "Doing" %}                
-                <form action="/change_status/{{item.id}}?status=Done" method="POST" class="form-group">
+              {% if task.status == "Doing" %}                
+                <form action="/change_status/{{task.id}}?status=Done" method="POST" class="form-group">
                     <button type="submit" class="btn btn-primary">>> Done</button>
                 </form>
               {% endif %}
-              <form action="/delete/{{item.id}}" method="POST" class="form-group">
+              <form action="/delete/{{task.id}}" method="POST" class="form-group">
                 <button type="submit" class="btn btn-primary">Delete</button>
               </form>
 
@@ -41,8 +41,8 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h2>Add New Item</h2>
-      <form action="/items" method="POST" class="form-group">
+      <h2>Add New task</h2>
+      <form action="/tasks" method="POST" class="form-group">
         <div class="form-group">
           <input type="text" class="form-control" name="title" id="title" placeholder="Title">
         </div>

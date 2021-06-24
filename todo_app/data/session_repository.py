@@ -1,42 +1,33 @@
 from flask import session
+from todo_app.data.task import task
 
-_DEFAULT_ITEMS = [
-    { 'id': 1, 'status': 'To Do', 'title': 'List saved todo items' },
-    { 'id': 2, 'status': 'To Do', 'title': 'Allow new items to be added' }
-]
+_DEFAULT_taskS = [ task(1, 'Fake Task 1', 'To Do'), task(2, 'Fake Task 2', 'To Do') ]
 
 class session_repository:
 
-    def get_items(self):
-        return session.get('items', _DEFAULT_ITEMS.copy())
+    def get_tasks(self):
+        return session.get('tasks', _DEFAULT_taskS.copy())
 
-    def get_item(self, id):
-        items = self.get_items()
-        return next((item for item in items if item['id'] == int(id)), None)
+    def __get_task(self, id):
+        tasks = self.get_tasks()
+        return next((t for t in tasks if t.id == int(id)), None)
 
-    def add_item(self, title, status):
-        items = self.get_items()
+    def add_task(self, title, status):
+        tasks = self.get_tasks()
 
-        # Determine the ID for the item based on that of the previously added item
-        id = items[-1]['id'] + 1 if items else 0
+        # Determine the ID for the task based on that of the previously added task
+        id = tasks[-1].id + 1 if tasks else 0
 
-        item = { 'id': id, 'title': title, 'status': status }
-        items.append(item)
-        session['items'] = items
+        new_task = task(id, title, status)
+        tasks.append(new_task)
+        session['tasks'] = tasks
 
-        return item
+    def update_task_status(self, id, status):
+        task_to_update = self.__get_task(id)
+        task_to_update.status = status
 
-    def update_item_status(self, id, status):
-        existing_items = self.get_items()
-        updated_items = [self.__update_status(existing_item, status) if existing_item['id'] == id else existing_item for existing_item in existing_items]
-        session['items'] = updated_items
-
-    def __update_status(self, existing_item, status):
-        existing_item['status'] = status
-        return existing_item
-
-    def delete_item(self, id):
-        items = self.get_items()
-        item = self.get_item(id)
-        items.remove(item)
-        session['items'] = items
+    def delete_task(self, id):
+        tasks = self.get_tasks()
+        task_to_delete = next((t for t in tasks if t.id == int(id)), None)
+        tasks.remove(task_to_delete)
+        session['tasks'] = tasks
