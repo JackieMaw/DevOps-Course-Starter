@@ -4,51 +4,39 @@ from todo_app.data.task import task
 class trello_repository:
 
     def __init__(self, key, token, workspace_name):
-        self.boardId = None
-        self.lists = None
+        self.boardid = None
+        self.status_to_listid = None
+        self.listid_to_status = None
         self.request_handler = real_trello_request_handler(key, token, workspace_name)
+        self.description = "Using Trello Repository with Real Request Handler"
+        self.__init_data()
 
-    def get_boardId(self):
-        if (self.boardId is None):
-            allBoards = self.request_handler.get_all_boards()
-            self.boardId = allBoards[0]["id"]
-        return self.boardId
+    def __init_data(self):
+        self.__get_boardid()
+        self.__get_status_lists()
 
-    def get_lists(self):
-        if (self.lists is None):
-            allLists = self.request_handler.get_all_lists(self.get_boardId())
-            self.lists = dict([(list["id"], list["name"]) for list in allLists])
-        return self.lists
+    def __get_boardid(self):
+        board = self.request_handler.get_board()
+        self.boardid = board["id"]
+
+    def __get_status_lists(self):
+        allLists = self.request_handler.get_all_lists(self.boardid)
+        self.status_to_listid = dict([(list["name"], list["id"]) for list in allLists])
+        self.listid_to_status = dict([(list["id"], list["name"]) for list in allLists])
 
     def get_tasks(self):
-
-        self.get_boardId()
-        self.get_lists()
-
-        allCards = self.request_handler.get_all_cards(self.get_boardId())
+        allCards = self.request_handler.get_all_cards(self.boardid)
         alltasks = [self.__transform_card_to_task(card) for card in allCards]
-
         return alltasks
 
     def __transform_card_to_task(self, card):
-        return task(card["id"], card["name"], self.__get_status(card["idList"]))
-
-    def __get_status(self, idList):
-        return self.lists[idList]
-
-    def get_listId_for_status(self, status):
-        for listId, listName in self.get_lists().tasks():
-            if listName == status:
-                return listId
-        return None
-
-    def update_task_status(self, id, newStatus):
-        listId = self.get_listId_for_status(newStatus)
-        self.request_handler.update_list_on_card(id, listId)        
+        return task(card["id"], card["name"], self.listid_to_status[(card["idList"])])
 
     def add_task(self, taskName, status):
-        listId = self.get_listId_for_status(status)
-        self.request_handler.add_new_card(taskName, listId)
+        self.request_handler.add_new_card(taskName, self.status_to_listid[status])
+
+    def update_task_status(self, id, status):
+        self.request_handler.update_list_on_card(id, self.status_to_listid[status])     
 
     def delete_task(self, id):
         self.request_handler.delete_card(id)

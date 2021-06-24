@@ -4,7 +4,7 @@ import requests
 
 class trello_request_handler(ABC):        
     @abstractmethod 
-    def get_all_boards(self):
+    def get_board(self):
         pass
        
     @abstractmethod 
@@ -28,16 +28,14 @@ class trello_request_handler(ABC):
         pass
 
 class fake_trelllo_request_handler(trello_request_handler):   
-    def get_all_boards(self):
+    def get_board(self):
         #https://api.trello.com/1/members/me/boards?fields=name,url&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         return json.loads("""
-[
     {
         "name": "ToDoApp",
         "id": "60cc9c9354703a81f8f3ecbe",
         "url": "https://trello.com/b/NLvhLBOS/todoapp"
-    }
-]""")
+    }""")
        
     def get_all_cards(self, boardId):
         #https://api.trello.com/1/boards/60cc9c9354703a81f8f3ecbe/cards?fields=name,idList&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
@@ -91,13 +89,14 @@ class real_trello_request_handler(trello_request_handler):
         self.workspace_name = workspace_name
         super().__init__()
 
-    def get_all_boards(self):
+    def get_board(self):
         #https://api.trello.com/1/members/me/boards?fields=name,url&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         payload = {'fields': "name,url", 'key': self.key, 'token' : self.token}
         r = requests.get(f"https://api.trello.com/1/members/me/boards", payload)
-        print(r.url)
+        print(r.url) #TODO - how do I use the Flask logger from here?
         print(r.status_code)
-        return r.json()
+        allBoards = r.json()
+        return next ((board for board in allBoards if board["name"] == self.workspace_name), None)
        
     def get_all_cards(self, boardId):
         #https://api.trello.com/1/boards/60cc9c9354703a81f8f3ecbe/cards?fields=name,idList&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829

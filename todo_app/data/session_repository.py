@@ -1,12 +1,15 @@
 from flask import session
 from todo_app.data.task import task
 
-_DEFAULT_taskS = [ task(1, 'Fake Task 1', 'To Do'), task(2, 'Fake Task 2', 'To Do') ]
+_DEFAULT_TASKS = [ task(1, 'Fake Task 1', 'To Do'), task(2, 'Fake Task 2', 'Doing'), task(3, 'Fake Task 3', 'Done') ]
 
 class session_repository:
 
+    def __init__(self) -> None:        
+        self.description = "Using Session Repository with Real Cookies"
+
     def get_tasks(self):
-        return session.get('tasks', _DEFAULT_taskS.copy())
+        return session.get('tasks', _DEFAULT_TASKS.copy())
 
     def __get_task(self, id):
         tasks = self.get_tasks()
@@ -23,7 +26,7 @@ class session_repository:
         session['tasks'] = tasks
 
     def update_task_status(self, id, status):
-        task_to_update = self.__get_task(id)
+        task_to_update = self.__get_task(int(id))
         task_to_update.status = status
 
     def delete_task(self, id):

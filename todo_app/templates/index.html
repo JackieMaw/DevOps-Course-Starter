@@ -5,16 +5,20 @@
   <div class="jumbotron bg-dark text-white">
     <h1 class="display-4">Do Me</h1>
     <p class="lead">Jackie's First Python Application</p>
+    <p class="text">{{ repository_description }}</p>
   </div>
 
   <div class="row">
     <div class="col-md-12">
-      <h2>tasks</h2>
+      <h2>All Tasks</h2>
+        <!--TODO{% if len(tasks) == 0 %}
+        <p class="text">There are no tasks, hooray!</p>
+        {% endif %}-->
         {% for task in tasks %}
           <div class="card" style="width: 18rem;">
             <!--<img src="https://via.placeholder.com/300" class="card-img-top" alt="A placeholder image">-->
             <div class="card-body">
-              <h5 class="card-title">{{ task.title }}</h5>
+              <h5 class="card-title">{{ task.name }}</h5>
               <p class="card-text">[{{ task.id }}]</p>
               <p class="card-text">{{ task.status }}</p>
             </div>
@@ -44,7 +48,7 @@
       <h2>Add New task</h2>
       <form action="/tasks" method="POST" class="form-group">
         <div class="form-group">
-          <input type="text" class="form-control" name="title" id="title" placeholder="Title">
+          <input type="text" class="form-control" name="task_name" id="task_name" placeholder="My Next Task">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>

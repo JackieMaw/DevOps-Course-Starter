@@ -22,30 +22,29 @@ repository = init_repository()
 
 @app.route('/')
 def index():
-    print("index()")
-    tasks = sorted(repository.get_tasks(), key=lambda task: task.status, reverse=True)
-    for i in tasks:
-        print(i)        
-    return render_template('index.html', tasks=tasks) 
+    app.logger.info("index()")
+    tasks = sorted(repository.get_tasks(), key=lambda task: task.status, reverse=True) 
+    app.logger.info(f"index() => {len(tasks)} tasks retrieved from repository")
+    return render_template('index.html', tasks=tasks, repository_description=repository.description) 
 
 @app.route('/tasks', methods=['POST'])
 def add_new_task():
-    print("add_new_task")
-    title = request.form['title']
-    print(title)
-    repository.add_task(title, "To Do")
+    app.logger.info("add_new_task()")
+    task_name = request.form["task_name"]
+    app.logger.info(f"add_new_task() => {task_name}")
+    repository.add_task(task_name, "To Do")
     return redirect('/')
 
 @app.route('/change_status/<id>', methods=['POST']) 
 def change_status(id): 
     status = request.args["status"]
-    print(f"mark_as_done: id = {id}, status = {status}")
-    repository.update_task_status(int(id), status)
+    app.logger.info(f"mark_as_done: id = {id}, status = {status}")
+    repository.update_task_status(id, status)
     return redirect('/')
 
 @app.route('/delete/<id>', methods=['POST']) 
 def delete(id): 
-    print(f"delete: id = {id}")
+    app.logger.info(f"delete: id = {id}")
     repository.delete_task(id)  
     return redirect('/')
 
