@@ -81,6 +81,15 @@ class fake_trelllo_request_handler(trello_request_handler):
     }
 ]""")
 
+    def update_list_on_card(self, cardId, listId):
+        pass
+
+    def add_new_card(self, cardName, listId):
+        pass
+
+    def delete_card(self, cardId):
+        pass
+
 class real_trello_request_handler(trello_request_handler):
 
     def __init__(self, key, token, workspace_name) -> None:

@@ -1,4 +1,4 @@
-from todo_app.data.trello_request_handler import real_trello_request_handler
+from todo_app.data.trello_request_handler import fake_trelllo_request_handler, real_trello_request_handler
 from todo_app.data.task import task
 
 class trello_repository:
@@ -9,6 +9,8 @@ class trello_repository:
         self.listid_to_status = None
         self.request_handler = real_trello_request_handler(key, token, workspace_name)
         self.description = "Using Trello Repository with Real Request Handler"
+        #self.request_handler = fake_trelllo_request_handler()
+        #self.description = "Using Trello Repository with Fake Request Handler"
         self.__init_data()
 
     def __init_data(self):
