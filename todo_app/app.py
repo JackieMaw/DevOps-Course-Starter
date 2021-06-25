@@ -25,7 +25,7 @@ def index():
     app.logger.info("index()")
     tasks = sorted(repository.get_tasks(), key=lambda task: task.status, reverse=True) 
     app.logger.info(f"index() => {len(tasks)} tasks retrieved from repository")
-    return render_template('index.html', tasks=tasks, repository_description=repository.description) 
+    return render_template('index.html', tasks=tasks, repository_description=repository.description, task_count=len(tasks)) 
 
 @app.route('/tasks', methods=['POST'])
 def add_new_task():
