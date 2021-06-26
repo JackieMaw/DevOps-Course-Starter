@@ -1,7 +1,8 @@
+from todo_app.data.task_repository import task_repository
 from todo_app.data.trello_request_handler import fake_trelllo_request_handler, real_trello_request_handler
 from todo_app.data.task import task
 
-class trello_repository:
+class trello_repository(task_repository):
 
     def __init__(self, key, token, workspace_name):
         self.boardid = None

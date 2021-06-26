@@ -22,31 +22,47 @@ repository = init_repository()
 
 @app.route('/')
 def index():
-    app.logger.info("index()")
-    tasks = sorted(repository.get_tasks(), key=lambda task: task.status, reverse=True) 
-    app.logger.info(f"index() => {len(tasks)} tasks retrieved from repository")
-    return render_template('index.html', tasks=tasks, repository_description=repository.description, task_count=len(tasks)) 
+    try:
+        app.logger.info("index()")
+        tasks = sorted(repository.get_tasks(), key=lambda task: task.status, reverse=True) 
+        app.logger.info(f"index() => {len(tasks)} tasks retrieved from repository")
+        return render_template('index.html', tasks=tasks, repository_description=repository.description, task_count=len(tasks)) 
+    except Exception as e:
+        app.logger.error("Error", e)
+        raise e
 
 @app.route('/tasks', methods=['POST'])
 def add_new_task():
-    app.logger.info("add_new_task()")
-    task_name = request.form["task_name"]
-    app.logger.info(f"add_new_task() => {task_name}")
-    repository.add_task(task_name, "To Do")
-    return redirect('/')
+    try:
+        app.logger.info("add_new_task()")
+        task_name = request.form["task_name"]
+        app.logger.info(f"add_new_task() => {task_name}")
+        repository.add_task(task_name, "To Do")
+        return redirect('/')
+    except Exception as e:
+        app.logger.error("Error", e)
+        raise e
 
 @app.route('/change_status/<id>', methods=['POST']) 
 def change_status(id): 
-    status = request.args["status"]
-    app.logger.info(f"mark_as_done: id = {id}, status = {status}")
-    repository.update_task_status(id, status)
-    return redirect('/')
+    try:
+        status = request.args["status"]
+        app.logger.info(f"mark_as_done: id = {id}, status = {status}")
+        repository.update_task_status(id, status)
+        return redirect('/')
+    except Exception as e:
+        app.logger.error("Error", e)
+        raise e
 
 @app.route('/delete/<id>', methods=['POST']) 
 def delete(id): 
-    app.logger.info(f"delete: id = {id}")
-    repository.delete_task(id)  
-    return redirect('/')
+    try:
+        app.logger.info(f"delete: id = {id}")
+        repository.delete_task(id)  
+        return redirect('/')
+    except Exception as e:
+        app.logger.error("Error", e)
+        raise e
 
 if __name__ == '__main__':
     app.run()

@@ -1,9 +1,10 @@
+from todo_app.data.task_repository import task_repository
 from flask import session
 from todo_app.data.task import task
 
 _DEFAULT_TASKS = [ task(1, 'Fake Task 1', 'To Do'), task(2, 'Fake Task 2', 'Doing'), task(3, 'Fake Task 3', 'Done') ]
 
-class session_repository:
+class session_repository(task_repository):
 
     def __init__(self) -> None:        
         self.description = "Using Session Repository with Real Cookies"
