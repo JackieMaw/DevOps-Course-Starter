@@ -4,16 +4,16 @@ from todo_app.flask_config import Config
 import os
 from dotenv import load_dotenv
 
-def init_repository():        
+def init_repository(logger):        
     load_dotenv()    
     key = os.getenv('TRELLO_KEY')
     token = os.getenv('TRELLO_TOKEN')
     workspace_name = os.getenv('TRELLO_WORKSPACE_NAME')
-    return trello_repository(key, token, workspace_name)
+    return trello_repository(key, token, workspace_name, logger)
 
 app = Flask(__name__)
 app.config.from_object(Config)
-repository = init_repository()
+repository = init_repository(app.logger)
 
 @app.route('/')
 def index():

@@ -4,12 +4,13 @@ from todo_app.data.task import Task
 
 class trello_repository(task_repository):
 
-    def __init__(self, key, token, workspace_name):
+    def __init__(self, key, token, workspace_name, logger):
         self.boardid = None
         self.status_to_listid = None
         self.listid_to_status = None
-        self.request_handler = real_trello_request_handler(key, token, workspace_name)
+        self.request_handler = real_trello_request_handler(key, token, workspace_name, logger)
         self.description = "Using Trello Repository with Real Request Handler"
+        #for unit testing with a fake web api
         #self.request_handler = fake_trelllo_request_handler()
         #self.description = "Using Trello Repository with Fake Request Handler"
         self.__init_data()
