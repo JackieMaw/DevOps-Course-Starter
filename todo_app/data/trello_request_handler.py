@@ -29,7 +29,6 @@ class trello_request_handler(ABC):
 
 class fake_trelllo_request_handler(trello_request_handler):   
     def get_board(self):
-        #https://api.trello.com/1/members/me/boards?fields=name,url&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         return json.loads("""
     {
         "name": "ToDoApp",
@@ -38,7 +37,6 @@ class fake_trelllo_request_handler(trello_request_handler):
     }""")
        
     def get_all_cards(self, boardId):
-        #https://api.trello.com/1/boards/60cc9c9354703a81f8f3ecbe/cards?fields=name,idList&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         return json.loads("""
 [
     {
@@ -64,7 +62,6 @@ class fake_trelllo_request_handler(trello_request_handler):
 ]""")
        
     def get_all_lists(self, boardId):
-        #https://api.trello.com/1/boards/60cc9c9354703a81f8f3ecbe/lists?fields=name&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         return json.loads("""
 [
     {
@@ -99,7 +96,6 @@ class real_trello_request_handler(trello_request_handler):
         super().__init__()
 
     def get_board(self):
-        #https://api.trello.com/1/members/me/boards?fields=name,url&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         payload = {'fields': "name,url", 'key': self.key, 'token' : self.token}
         r = requests.get(f"https://api.trello.com/1/members/me/boards", payload)
         print(r.url) #TODO - how do I use the Flask logger from here?
@@ -108,7 +104,6 @@ class real_trello_request_handler(trello_request_handler):
         return next ((board for board in allBoards if board["name"] == self.workspace_name), None)
        
     def get_all_cards(self, boardId):
-        #https://api.trello.com/1/boards/60cc9c9354703a81f8f3ecbe/cards?fields=name,idList&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         payload = {'fields': "name,idList", 'key': self.key, 'token' : self.token}
         r = requests.get(f"https://api.trello.com/1/boards/{boardId}/cards", payload)
         print(r.url)
@@ -116,7 +111,6 @@ class real_trello_request_handler(trello_request_handler):
         return r.json()
        
     def get_all_lists(self, boardId):
-        #https://api.trello.com/1/boards/60cc9c9354703a81f8f3ecbe/lists?fields=name&key=b4b0f437afe756ad8944b7aedfbe3cf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb365c7f4fdd732829
         payload = {'fields': "name", 'key': self.key, 'token' : self.token}
         r = requests.get(f"https://api.trello.com/1/boards/{boardId}/lists", payload)
         print(r.url)
@@ -124,22 +118,18 @@ class real_trello_request_handler(trello_request_handler):
         return r.json()
 
     def update_list_on_card(self, cardId, listId):
-        #PUT /1/cards/{cardID}?idList={listID}
         payload = {'idList': listId, 'key': self.key, 'token' : self.token}
         r = requests.put(f"https://api.trello.com/1/cards/{cardId}", payload)
         print(r.url)
         print(r.status_code)
 
     def add_new_card(self, cardName, listId):
-        #POST /1/cards?name={name}&idList={listID}
         payload = {'name': cardName, 'idList': listId, 'key': self.key, 'token' : self.token}
         r = requests.post(f"https://api.trello.com/1/cards", payload)
         print(r.url)
         print(r.status_code)
 
     def delete_card(self, cardId):
-        #DELETE /1/cards/{cardID}
-        #payload = {'key': self.key, 'token' : self.token}
         r = requests.delete(f"https://api.trello.com/1/cards/{cardId}?key={self.key}&token={self.token}")
         print(r.url)
         print(r.status_code)
