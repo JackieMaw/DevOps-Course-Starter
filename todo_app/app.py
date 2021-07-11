@@ -1,45 +1,63 @@
 from flask import Flask, render_template, request, redirect
-from todo_app.data.session_items import delete_item, get_items, save_item, add_item, get_item
-
+from todo_app.data.trello_repository import trello_repository
 from todo_app.flask_config import Config
+import os
+from dotenv import load_dotenv
+
+def init_repository(logger):        
+    load_dotenv()    
+    key = os.getenv('TRELLO_KEY')
+    token = os.getenv('TRELLO_TOKEN')
+    workspace_name = os.getenv('TRELLO_WORKSPACE_NAME')
+    return trello_repository(key, token, workspace_name, logger)
 
 app = Flask(__name__)
 app.config.from_object(Config)
-
+repository = init_repository(app.logger)
 
 @app.route('/')
 def index():
-    print("index()")
-    items = sorted(get_items(), key=lambda item: item["status"], reverse=True)
-    for i in get_items():
-        print(i)
-    return render_template('index.html', items=items) 
-
-@app.route('/items', methods=['POST'])
-def add_new_item():
-    print("add_new_item")
-    title = request.form['title']
-    print(title)
-    add_item(title)
-    return redirect('/')
-
-@app.route('/mark_as_done/<itemId>', methods=['POST']) 
-def mark_as_done(itemId): 
-    print(f"mark_as_done: itemId = {itemId}")
-    item = get_item(itemId)
-    item["status"] = "Done"
-    save_item(item)
-    return redirect('/')
-
-@app.route('/delete/<itemId>', methods=['POST']) 
-def delete(itemId): 
     try:
-        print(f"delete: itemId = {itemId}")
-        delete_item(itemId)        
-    except Exception as error:
-        print(f"Exception: {error}")
-    finally:
+        app.logger.info("index()")
+        tasks = sorted(repository.get_tasks(), key=lambda task: task.status, reverse=True) 
+        app.logger.info(f"index() => {len(tasks)} tasks retrieved from repository")
+        return render_template('index.html', tasks=tasks, repository_description=repository.description, task_count=len(tasks)) 
+    except Exception as e:
+        app.logger.error("Error", e)
+        raise e
+
+@app.route('/tasks', methods=['POST'])
+def add_new_task():
+    try:
+        app.logger.info("add_new_task()")
+        task_name = request.form["task_name"]
+        app.logger.info(f"add_new_task() => {task_name}")
+        repository.add_task(task_name, "To Do")
         return redirect('/')
+    except Exception as e:
+        app.logger.error("Error", e)
+        raise e
+
+@app.route('/change_status/<id>', methods=['POST']) 
+def change_status(id): 
+    try:
+        status = request.args["status"]
+        app.logger.info(f"mark_as_done: id = {id}, status = {status}")
+        repository.update_task_status(id, status)
+        return redirect('/')
+    except Exception as e:
+        app.logger.error("Error", e)
+        raise e
+
+@app.route('/delete/<id>', methods=['POST']) 
+def delete(id): 
+    try:
+        app.logger.info(f"delete: id = {id}")
+        repository.delete_task(id)  
+        return redirect('/')
+    except Exception as e:
+        app.logger.error("Error", e)
+        raise e
 
 if __name__ == '__main__':
     app.run()
