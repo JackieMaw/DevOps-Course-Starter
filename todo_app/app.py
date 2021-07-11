@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect
-from todo_app.data.session_repository import session_repository
 from todo_app.data.trello_repository import trello_repository
 from todo_app.flask_config import Config
 import os
@@ -7,14 +6,10 @@ from dotenv import load_dotenv
 
 def init_repository():        
     load_dotenv()    
-    repository = os.getenv('REPOSITORY')
-    if repository == 'trello':
-        key = os.getenv('TRELLO_KEY')
-        token = os.getenv('TRELLO_TOKEN')
-        workspace_name = os.getenv('TRELLO_WORKSPACE_NAME')
-        return trello_repository(key, token, workspace_name)
-    else:
-        return session_repository()
+    key = os.getenv('TRELLO_KEY')
+    token = os.getenv('TRELLO_TOKEN')
+    workspace_name = os.getenv('TRELLO_WORKSPACE_NAME')
+    return trello_repository(key, token, workspace_name)
 
 app = Flask(__name__)
 app.config.from_object(Config)

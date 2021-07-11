@@ -18,7 +18,7 @@
         {% endif %}
         {% for task in tasks %}
           <div class="card" style="width: 18rem;">
-            <!-- <img src="/static/icons/add.png" class="card-img-top" alt="Task Image"> -->
+            <img src="/static/icons/add.png" class="card-img-top" alt="Add Task Image">
             <div class="card-body">
               <h5 class="card-title">{{ task.name }}</h5>
               <p class="card-text">[{{ task.id }}]</p>
@@ -34,12 +34,10 @@
                       <button type="submit" class="btn btn-secondary">>> Done</button>
                   </form>
                 {% endif %}
-                <!--TODO How can I change the button colour to RED?-->
                 <form action="/delete/{{task.id}}" method="POST" class="form-group">
-                  <button type="submit" class="btn btn-secondary" >Delete</button>
+                  <button type="submit" class="btn btn-secondary btn-danger" >Delete</button>
                 </form>
               </div>
-              <img src="/static/icons/add.png" class="card-img-top" alt="Add Task Image">
             </div>
           </div>
         {% endfor %}

@@ -1,5 +1,5 @@
 #TODO - how do I make this class JSON Serializable so that I can store it in Session?
-class task():
+class Task():
 
     def __init__(self, id, name, status):
         self.id = id

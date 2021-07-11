@@ -1,6 +1,6 @@
 from todo_app.data.task_repository import task_repository
 from todo_app.data.trello_request_handler import fake_trelllo_request_handler, real_trello_request_handler
-from todo_app.data.task import task
+from todo_app.data.task import Task
 
 class trello_repository(task_repository):
 
@@ -33,7 +33,7 @@ class trello_repository(task_repository):
         return alltasks
 
     def __transform_card_to_task(self, card):
-        return task(card["id"], card["name"], self.listid_to_status[(card["idList"])])
+        return Task(card["id"], card["name"], self.listid_to_status[(card["idList"])])
 
     def add_task(self, taskName, status):
         self.request_handler.add_new_card(taskName, self.status_to_listid[status])

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from todo_app.data.task import task
+from todo_app.data.task import Task
 
 class task_repository(ABC):
 
