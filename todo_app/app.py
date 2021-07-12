@@ -3,6 +3,7 @@ from todo_app.data.trello_repository import trello_repository
 from todo_app.flask_config import Config
 import os
 from dotenv import load_dotenv
+from todo_app.viewmodel import ViewModel
 
 def init_repository(logger):        
     load_dotenv()    
@@ -21,7 +22,8 @@ def index():
         app.logger.info("index()")
         tasks = sorted(repository.get_tasks(), key=lambda task: task.status, reverse=True) 
         app.logger.info(f"index() => {len(tasks)} tasks retrieved from repository")
-        return render_template('index.html', tasks=tasks, repository_description=repository.description, task_count=len(tasks)) 
+        view_model = ViewModel(tasks, repository.description)
+        return render_template('index.html', view_model=view_model) 
     except Exception as e:
         app.logger.error("Error", e)
         raise e

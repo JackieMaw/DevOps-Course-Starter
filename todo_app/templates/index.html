@@ -5,18 +5,18 @@
   <div class="jumbotron bg-dark text-white">
     <h1 class="display-4">Do Me</h1>
     <p class="lead">Jackie's First Python Application</p>
-    <p class="text">{{ repository_description }}</p>
+    <p class="text">{{ view_model.repository_description }}</p>
   </div>
 
   <div class="row">
     <div class="col-sm" >
       <h2>All Tasks</h2>
-        {% if task_count == 0 %}
+        {% if view_model.task_count == 0 %}
         <p class="text">There are no tasks, hooray!</p>
         {% else %}
-        <p class="text">You have {{ task_count }} tasks:</p>
+        <p class="text">You have {{ view_model.task_count }} tasks:</p>
         {% endif %}
-        {% for task in tasks %}
+        {% for task in view_model.tasks %}
           <div class="card" style="width: 18rem;">
             <img src="/static/icons/add.png" class="card-img-top" alt="Add Task Image">
             <div class="card-body">
