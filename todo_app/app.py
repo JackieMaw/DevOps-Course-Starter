@@ -20,7 +20,7 @@ repository = init_repository(app.logger)
 def index():
     try:
         app.logger.info("index()")
-        tasks = sorted(repository.get_tasks(), key=lambda task: task.status, reverse=True) 
+        tasks = repository.get_tasks()
         app.logger.info(f"index() => {len(tasks)} tasks retrieved from repository")
         view_model = ViewModel(tasks, repository.description)
         return render_template('index.html', view_model=view_model) 
