@@ -12,9 +12,13 @@ def init_repository(logger):
     workspace_name = os.getenv('TRELLO_WORKSPACE_NAME')
     return trello_repository(key, token, workspace_name, logger)
 
-app = Flask(__name__)
-app.config.from_object(Config)
-repository = init_repository(app.logger)
+def create_app(): 
+    app = Flask(__name__)
+    app.config.from_object('todo_app.flask_config.Config')
+    repository = init_repository(app.logger)
+    return (app, repository)
+
+(app, repository) = create_app()
 
 @app.route('/')
 def index():
