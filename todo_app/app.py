@@ -1,12 +1,11 @@
 from flask import Flask, render_template, request, redirect
 from todo_app.data.trello_repository import trello_repository
-from todo_app.flask_config import Config
 import os
 from dotenv import load_dotenv
 from todo_app.viewmodel import ViewModel
 
 def init_repository(logger):        
-    load_dotenv()    
+    #load_dotenv()    
     key = os.getenv('TRELLO_KEY')
     token = os.getenv('TRELLO_TOKEN')
     workspace_name = os.getenv('TRELLO_WORKSPACE_NAME')
