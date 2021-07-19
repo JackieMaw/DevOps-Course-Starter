@@ -2,19 +2,21 @@ from todo_app.data.task_repository import task_repository
 from todo_app.data.trello_request_handler import real_trello_request_handler
 from todo_app.data.task import Task, TaskStatus
 from pickle import dumps, loads
+import os
 
 class trello_repository(task_repository):
 
-    def __init__(self, key, token, workspace_name, logger):
+    def __init__(self, key, token, logger):
         self.boardid = None
         self.status_to_listid = None
         self.listid_to_status = None
-        self.request_handler = real_trello_request_handler(key, token, workspace_name, logger)
+        self.request_handler = real_trello_request_handler(key, token, logger)
         self.description = "Using Trello Repository with Real Request Handler"
         self.loaded = False
 
-    def __load(self):
-        board = self.request_handler.get_board()
+    def __load(self):        
+        workspace_name = os.getenv('TRELLO_WORKSPACE_NAME') #TODO - i don't like this from here...
+        board = self.request_handler.get_board(workspace_name)
         self.boardid = board["id"]
         allLists = self.request_handler.get_all_lists(self.boardid)
         self.status_to_listid = dict([(list["name"], list["id"]) for list in allLists])

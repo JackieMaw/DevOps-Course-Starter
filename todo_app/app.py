@@ -5,11 +5,9 @@ from dotenv import load_dotenv
 from todo_app.viewmodel import ViewModel
 
 def init_repository(logger):        
-    #load_dotenv()    
     key = os.getenv('TRELLO_KEY')
     token = os.getenv('TRELLO_TOKEN')
-    workspace_name = os.getenv('TRELLO_WORKSPACE_NAME')
-    return trello_repository(key, token, workspace_name, logger)
+    return trello_repository(key, token, logger)
 
 def create_app(): 
     app = Flask(__name__)
