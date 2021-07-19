@@ -63,7 +63,7 @@ def client():
 
 @patch('requests.get')
 def test_index_page(mock_get_requests, client):
-    mock_get_requests.side_effect = mock_get_lists
+    mock_get_requests.side_effect = mock_requests_get
     response = client.get('/')
 
     assert "CARD_ID_1" in str(response.data)
@@ -71,8 +71,17 @@ def test_index_page(mock_get_requests, client):
     assert "CARD_ID_3" in str(response.data)
     assert "CARD_ID_4" in str(response.data)
 
-def mock_get_lists(url, params):    
-    print(f'MOCK: {url}')
+@patch('requests.delete')
+@patch('requests.get')
+def test_delete_page(requests_get, requests_delete, client):
+    requests_get.side_effect = mock_requests_get
+    requests_delete.side_effect = mock_requests_delete
+    response = client.post('/delete/CARD_ID_1')
+    
+    requests_delete.assert_called_with('https://api.trello.com/1/cards/CARD_ID_1?key=FAKE_KEY&token=FAKE_TOKEN')
+
+def mock_requests_get(url, params):    
+    print(f'MOCK requests.get: {url}')
     if url == 'https://api.trello.com/1/members/me/boards':
         response = Mock()
         response.json.return_value = ALL_BOARDS
@@ -90,7 +99,20 @@ def mock_get_lists(url, params):
         response.json.return_value = ALL_CARDS
         response.url = 'https://api.trello.com/1/boards/BOARD_ID/cards'
         response.status_code = 200
-        return response
+        return response    
+    else:
+        print(f'url not supported by Mock: {url}')
+        raise ValueError (f'url not supported by Mock: {url}')
+
+
+def mock_requests_delete(url):    
+    print(f'MOCK requests.delete: {url}')
+    if url == 'https://api.trello.com/1/cards/CARD_ID_1?key=FAKE_KEY&token=FAKE_TOKEN':
+        response = Mock()
+        response.json.return_value = ALL_CARDS
+        response.url = 'https://api.trello.com/1/cards/CARD_ID_1?key=FAKE_KEY&token=FAKE_TOKEN'
+        response.status_code = 200
+        return response        
     else:
         print(f'url not supported by Mock: {url}')
         raise ValueError (f'url not supported by Mock: {url}')
