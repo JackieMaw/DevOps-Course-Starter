@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from logging import error
 import requests
 
 class trello_request_handler(ABC):        
@@ -45,7 +44,7 @@ class real_trello_request_handler(trello_request_handler):
             return next ((board for board in allBoards if board["name"] == self.workspace_name), None)
         except Exception as e:
             self.logger.info(f'get_board FAILED with Exception: {e}')
-            return None
+            raise e
 
        
     def get_all_cards(self, boardId):
