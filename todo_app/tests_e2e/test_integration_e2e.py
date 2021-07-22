@@ -41,6 +41,23 @@ def test_index_page(app_with_temp_board):
     client = app_with_temp_board.test_client()
     response = client.get('/')
     assert "Do Me" in str(response.data)
+    assert "card_title" not in str(response.data) # there should be no tasks
+
+def test_add_task(app_with_temp_board):
+    # this is not thread safe, when the other tests run at the same time they mess about with the config!
+    # if it runs with FAKE_KEY then it will fail
+    client = app_with_temp_board.test_client()
+    response = client.get('/')
+    assert "Do Me" in str(response.data)
+    assert "card-title" not in str(response.data) # there should be no tasks
+
+    response = client.post('/tasks', data=dict(task_name="AddedByIntegrationTest"))
+    assert "Redirecting..." in str(response.data)
+
+    response = client.get('/')
+    assert "Do Me" in str(response.data)
+    assert "card-title" in str(response.data) # there should be at least 1 task
+    assert "AddedByIntegrationTest" in str(response.data) # there should be at least 1 task
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -56,6 +73,8 @@ def test_task_journey(driver, app_with_temp_board):
 
     elem = driver.find_element_by_name("task_name")
     elem.clear()
-    elem.send_keys("AutogenTask")
+    elem.send_keys("AddedByIntegrationTest_Selenium")
     elem.send_keys(Keys.RETURN)
-    assert driver.title == 'Do Me'
+
+    elemements = driver.find_elements_by_class_name("card-title")
+    assert len(elemements) == 1

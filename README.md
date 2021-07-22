@@ -43,7 +43,7 @@ If you wish to switch to Trello, do the following:
 5. Set the following values in the .env file:
         TRELLO_KEY=trello-key
         TRELLO_TOKEN=trello_token
-        TRELLO_WORKSPACE_NAME=todoapp
+        TRELLO_BOARD_NAME=todoapp
 
 
 ## Running the App

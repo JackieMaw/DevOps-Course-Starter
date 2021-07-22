@@ -15,7 +15,7 @@ class trello_repository(task_repository):
         self.loaded = False
 
     def __load(self):        
-        workspace_name = os.getenv('TRELLO_WORKSPACE_NAME') #TODO - i don't like this from here...
+        workspace_name = os.getenv('TRELLO_BOARD_NAME') #TODO - i don't like this from here...
         board = self.request_handler.get_board(workspace_name)
         self.boardid = board["id"]
         allLists = self.request_handler.get_all_lists(self.boardid)

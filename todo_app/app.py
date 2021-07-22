@@ -24,7 +24,7 @@ def create_app():
             response = render_template('index.html', view_model=view_model) 
             return response
         except Exception as e:
-            app.logger.error("Error", e)
+            app.logger.error(f"Error : {e}")
             raise e
 
     @app.route('/tasks', methods=['POST'])
@@ -36,7 +36,7 @@ def create_app():
             repository.add_task(task_name, "To Do")
             return redirect('/')
         except Exception as e:
-            app.logger.error("Error", e)
+            app.logger.error("Error: %s", e)
             raise e
 
     @app.route('/change_status/<id>', methods=['POST']) 
@@ -47,7 +47,7 @@ def create_app():
             repository.update_task_status(id, status)
             return redirect('/')
         except Exception as e:
-            app.logger.error("Error", e)
+            app.logger.error(f"Error : {e}")
             raise e
 
     @app.route('/delete/<id>', methods=['POST']) 
@@ -57,7 +57,7 @@ def create_app():
             repository.delete_task(id)  
             return redirect('/')
         except Exception as e:
-            app.logger.error("Error", e)
+            app.logger.error(f"Error : {e}")
             raise e
     
     return app
