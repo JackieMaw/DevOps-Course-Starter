@@ -41,3 +41,21 @@ def test_index_page(app_with_temp_board):
     client = app_with_temp_board.test_client()
     response = client.get('/')
     assert "Do Me" in str(response.data)
+
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+@pytest.fixture(scope="module")
+def driver():
+    with webdriver.Firefox() as driver:
+        yield driver
+
+def test_task_journey(driver, app_with_temp_board):
+    driver.get('http://localhost:5000/') #this is not using the temporary board
+    assert driver.title == 'Do Me'
+
+    elem = driver.find_element_by_name("task_name")
+    elem.clear()
+    elem.send_keys("AutogenTask")
+    elem.send_keys(Keys.RETURN)
+    assert driver.title == 'Do Me'
