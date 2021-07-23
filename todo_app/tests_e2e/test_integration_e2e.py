@@ -1,3 +1,4 @@
+import time
 import os
 from threading import Thread
 from todo_app.data.trello_request_handler import real_trello_request_handler
@@ -67,14 +68,32 @@ def driver():
     with webdriver.Firefox() as driver:
         yield driver
 
-def test_task_journey(driver, app_with_temp_board):
-    driver.get('http://localhost:5000/') #this is not using the temporary board
+def test_task_journey(driver : webdriver.Firefox, app_with_temp_board):
+    driver.get('http://localhost:5000/')
     assert driver.title == 'Do Me'
+
+    print(driver.page_source)
 
     elem = driver.find_element_by_name("task_name")
     elem.clear()
     elem.send_keys("AddedByIntegrationTest_Selenium")
     elem.send_keys(Keys.RETURN)
 
+    time.sleep(5) #is there a better way to do this?
+
+    print(driver.page_source)
+
     elemements = driver.find_elements_by_class_name("card-title")
     assert len(elemements) == 1
+
+    elem = driver.find_element_by_class_name("btn-danger")
+    elem.click()
+
+    time.sleep(5) #is there a better way to do this?
+
+    print(driver.page_source)
+
+    elemements = driver.find_elements_by_class_name("card-title")
+    assert len(elemements) == 0
+
+    driver.close()
