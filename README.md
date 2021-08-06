@@ -32,18 +32,17 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
 
-## Repository Options
+## Storing Data on Trello
 
-By default the application uses a cookie to store Tasks.
-If you wish to switch to Trello, do the following:
-1. Modify the following value in the .env file: REPOSITORY=trello
-2. Create a trello account here: https://trello.com/signup
-3. Create a workspace
-4. View your API Key and generate a Token: https://trello.com/app-key
+The application stores the tasks on Trello.
+In order to set this up, please do the following:
+1. Create a trello account here: https://trello.com/signup
+2. Create a workspace (this will be your TRELLO_BOARD_NAME)
+3. View your API Key and generate a Token: https://trello.com/app-key
 5. Set the following values in the .env file:
         TRELLO_KEY=trello-key
         TRELLO_TOKEN=trello_token
-        TRELLO_BOARD_NAME=todoapp
+        TRELLO_BOARD_NAME=ToDoApp
 
 
 ## Running the App
@@ -64,3 +63,24 @@ You should see output similar to the following:
  * Debugger PIN: 226-556-590
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+
+## Setting up the Tests
+
+You need to install Mozilla Firefox and Gecko Driver.
+You need to add the geckodriver.exe to your system path.
+
+## Running the Tests
+
+The unit tests and the integration tests cannot be run concurrently, because the shared global variables interfere with each other.
+
+To run the unit tests, run:
+
+```bash
+$ poetry run pytest "todo_app\tests\"
+```
+
+To run the integration tests, run:
+
+```bash
+$ poetry run pytest "todo_app\tests_e2e\test_integration_e2e.py"
+```
