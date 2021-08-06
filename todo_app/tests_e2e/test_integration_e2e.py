@@ -9,10 +9,9 @@ from todo_app import app
 @pytest.fixture(scope='module')
 def app_with_temp_board():
     
+    load_dotenv(override=True)
     os.environ['TRELLO_board_name'] = 'TEST_BOARD'
     application = app.create_app()
-
-    #load_dotenv()    
     key = os.getenv('TRELLO_KEY')
     token = os.getenv('TRELLO_TOKEN')
     board_name = 'TEST_BOARD'
