@@ -66,8 +66,8 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 ## Setting up the Tests
 
-You need to install Mozilla Firefox and Gecko Driver.
-You need to add the geckodriver.exe to your system path.
+You need to install Mozilla Firefox and download geckodriver.exe.
+You need to copy geckodriver.exe into the root of your project and add the geckodriver.exe to your system path.
 
 ## Running the Tests
 
