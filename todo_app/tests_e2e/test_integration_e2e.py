@@ -5,25 +5,28 @@ from todo_app.data.trello_request_handler import real_trello_request_handler
 import pytest
 from dotenv import load_dotenv, find_dotenv
 from todo_app import app
+import random
+import string
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def app_with_temp_board():
-    
+    # pytest runs tests in parallel, so each test must have it's own board
+    board_name = 'TEST_BOARD_' + ''.join(random.choice(string.ascii_letters) for i in range(10))
+
     load_dotenv(override=True)
-    os.environ['TRELLO_board_name'] = 'TEST_BOARD'
+    os.environ['TRELLO_BOARD_NAME'] = board_name
     application = app.create_app()
     key = os.getenv('TRELLO_KEY')
     token = os.getenv('TRELLO_TOKEN')
-    board_name = 'TEST_BOARD'
     request_handler = real_trello_request_handler(key, token, application.logger) # don't know how to get logger until app created
 
     try:
          # if the board already exists, delete it
         board_id = request_handler.get_board(board_name)["id"]
         request_handler.delete_board(board_id)
-        request_handler.create_board("TEST_BOARD")
+        request_handler.create_board(board_name)
     except:
-        request_handler.create_board("TEST_BOARD")
+        request_handler.create_board(board_name)
     finally:
         board_id = request_handler.get_board(board_name)["id"]
     
@@ -36,16 +39,12 @@ def app_with_temp_board():
     request_handler.delete_board(board_id) # cleanup
 
 def test_index_page(app_with_temp_board):
-    # this is not thread safe, when the other tests run at the same time they mess about with the config!
-    # if it runs with FAKE_KEY then it will fail
     client = app_with_temp_board.test_client()
     response = client.get('/')
     assert "Do Me" in str(response.data)
     assert "card_title" not in str(response.data) # there should be no tasks
 
 def test_add_task(app_with_temp_board):
-    # this is not thread safe, when the other tests run at the same time they mess about with the config!
-    # if it runs with FAKE_KEY then it will fail
     client = app_with_temp_board.test_client()
     response = client.get('/')
     assert "Do Me" in str(response.data)
@@ -61,6 +60,7 @@ def test_add_task(app_with_temp_board):
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
 
 @pytest.fixture(scope="module")
 def driver():
@@ -78,20 +78,15 @@ def test_task_journey(driver : webdriver.Firefox, app_with_temp_board):
     elem.send_keys("AddedByIntegrationTest_Selenium")
     elem.send_keys(Keys.RETURN)
 
-    time.sleep(5) #is there a better way to do this?
-
-    print(driver.page_source)
-
-    elemements = driver.find_elements_by_class_name("card-title")
-    assert len(elemements) == 1
+    #check that the task has been added
+    element = WebDriverWait(driver, 5).until(lambda d: d.find_element_by_xpath("//h5[@class='card-title' and contains(text(), 'AddedByIntegrationTest_Selenium')]"))
 
     elem = driver.find_element_by_class_name("btn-danger")
     elem.click()
 
-    time.sleep(5) #is there a better way to do this?
+    time.sleep(2)
 
-    print(driver.page_source)
-
+    #check that there are no tasks
     elemements = driver.find_elements_by_class_name("card-title")
     assert len(elemements) == 0
 
