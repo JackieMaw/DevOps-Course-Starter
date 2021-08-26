@@ -1,7 +1,13 @@
-#TODO - how do I make this class JSON Serializable so that I can store it in Session?
+from enum import Enum
+
+class TaskStatus(Enum):
+    ToDo = "To Do"
+    Doing = "Doing"
+    Done = "Done"
+
 class Task():
 
-    def __init__(self, id, name, status):
+    def __init__(self, id, name, status : TaskStatus):
         self.id = id
         self.name = name
         self.status = status

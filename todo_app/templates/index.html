@@ -5,35 +5,53 @@
   <div class="jumbotron bg-dark text-white">
     <h1 class="display-4">Do Me</h1>
     <p class="lead">Jackie's First Python Application</p>
-    <p class="text">{{ repository_description }}</p>
+    <p class="text">{{ view_model.repository_description }}</p>
   </div>
 
   <div class="row">
     <div class="col-sm" >
-      <h2>All Tasks</h2>
-        {% if task_count == 0 %}
-        <p class="text">There are no tasks, hooray!</p>
-        {% else %}
-        <p class="text">You have {{ task_count }} tasks:</p>
-        {% endif %}
-        {% for task in tasks %}
+      <h2>To Do</h2>
+        {% for task in view_model.ToDo %}
           <div class="card" style="width: 18rem;">
-            <img src="/static/icons/add.png" class="card-img-top" alt="Add Task Image">
             <div class="card-body">
               <h5 class="card-title">{{ task.name }}</h5>
-              <p class="card-text">[{{ task.id }}]</p>
-              <p class="card-text">{{ task.status }}</p>
+              <div class="btn-group" role="group" aria-label="Task Actions">                             
+                <form action="/change_status/{{task.id}}?status=Doing" method="POST" class="form-group">
+                    <button type="submit" class="btn btn-secondary">>> Doing</button>
+                </form>                
+                <form action="/delete/{{task.id}}" method="POST" class="form-group">
+                  <button type="submit" class="btn btn-secondary btn-danger" >Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+    <div class="col-sm" >
+      <h2>Doing</h2>
+        {% for task in view_model.Doing %}
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{ task.name }}</h5>
+              <div class="btn-group" role="group" aria-label="Task Actions">           
+                <form action="/change_status/{{task.id}}?status=Done" method="POST" class="form-group">
+                    <button type="submit" class="btn btn-secondary">>> Done</button>
+                </form>
+                <form action="/delete/{{task.id}}" method="POST" class="form-group">
+                  <button type="submit" class="btn btn-secondary btn-danger" >Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+    <div class="col-sm" >
+      <h2>Done</h2>
+        {% for task in view_model.Done %}
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{ task.name }}</h5>
               <div class="btn-group" role="group" aria-label="Task Actions">
-                {% if task.status == "To Do" %}                
-                  <form action="/change_status/{{task.id}}?status=Doing" method="POST" class="form-group">
-                      <button type="submit" class="btn btn-secondary">>> Doing</button>
-                  </form>
-                {% endif %}
-                {% if task.status == "Doing" %}                
-                  <form action="/change_status/{{task.id}}?status=Done" method="POST" class="form-group">
-                      <button type="submit" class="btn btn-secondary">>> Done</button>
-                  </form>
-                {% endif %}
                 <form action="/delete/{{task.id}}" method="POST" class="form-group">
                   <button type="submit" class="btn btn-secondary btn-danger" >Delete</button>
                 </form>
@@ -53,10 +71,7 @@
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-          </div>        
-          <div class="col-sm" >
-            <img src="/static/icons/new.png" class="card-img-top" alt="New Idea Image">
-          </div>  
+          </div>
         </div>
       </div>
     </div>
