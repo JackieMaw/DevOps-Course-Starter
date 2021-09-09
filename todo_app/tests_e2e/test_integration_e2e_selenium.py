@@ -1,8 +1,9 @@
+import time
 import os
 from threading import Thread
 from todo_app.data.trello_request_handler import real_trello_request_handler
 import pytest
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 from todo_app import app
 import random
 import string
@@ -38,22 +39,34 @@ def app_with_temp_board():
     thread.join(1)
     request_handler.delete_board(board_id) # cleanup
 
-def test_index_page(app_with_temp_board):
-    client = app_with_temp_board.test_client()
-    response = client.get('/')
-    assert "Do Me" in str(response.data)
-    assert "card_title" not in str(response.data) # there should be no tasks
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
 
-def test_add_task(app_with_temp_board):
-    client = app_with_temp_board.test_client()
-    response = client.get('/')
-    assert "Do Me" in str(response.data)
-    assert "card-title" not in str(response.data) # there should be no tasks
+@pytest.fixture
+def driver():
+    with webdriver.Firefox() as driver:
+        yield driver
 
-    response = client.post('/tasks', data=dict(task_name="AddedByIntegrationTest"))
-    assert "Redirecting..." in str(response.data)
+def test_task_journey(driver : webdriver.Firefox, app_with_temp_board):
+    driver.get('http://localhost:5000/')
+    assert driver.title == 'Do Me'
 
-    response = client.get('/')
-    assert "Do Me" in str(response.data)
-    assert "card-title" in str(response.data) # there should be at least 1 task
-    assert "AddedByIntegrationTest" in str(response.data) # there should be at least 1 task
+    elem = driver.find_element_by_name("task_name")
+    elem.clear()
+    elem.send_keys("AddedByIntegrationTest_Selenium")
+    elem.send_keys(Keys.RETURN)
+
+    #check that the task has been added
+    element = WebDriverWait(driver, 5).until(lambda d: d.find_element_by_xpath("//h5[@class='card-title' and contains(text(), 'AddedByIntegrationTest_Selenium')]"))
+
+    elem = driver.find_element_by_class_name("btn-danger")
+    elem.click()
+
+    time.sleep(2)
+
+    #check that there are no tasks
+    elemements = driver.find_elements_by_class_name("card-title")
+    assert len(elemements) == 0
+
+    driver.close()
