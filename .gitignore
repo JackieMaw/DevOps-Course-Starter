@@ -118,3 +118,7 @@ env/
 
 ### Configuration files ###
 .env
+
+### OTHER FILES ###
+*.log
+*.exe

@@ -38,7 +38,7 @@ class real_trello_request_handler(trello_request_handler):
     def get_board(self, board_name):
         payload = {'fields': "name,url", 'key': self.key, 'token' : self.token}
         r = requests.get(f"{self.trello_url}/1/members/me/boards", payload)
-        self.logger.info(f'get_board: {r.url} => {r.status_code}')
+        self.logger.info(f'get_board: {board_name} {r.url} => {r.status_code}')
         if (r.status_code == 200):
             allBoards = r.json()
             board = next ((board for board in allBoards if board["name"] == board_name), None)
@@ -51,7 +51,7 @@ class real_trello_request_handler(trello_request_handler):
     def get_all_cards(self, boardId):
         payload = {'fields': "name,idList", 'key': self.key, 'token' : self.token}
         r = requests.get(f"{self.trello_url}/1/boards/{boardId}/cards", payload)
-        self.logger.info(f'get_all_cards: {r.url} => {r.status_code}')
+        self.logger.info(f'get_all_cards [{boardId}]: {r.url} => {r.status_code}')
         return r.json()
        
     def get_all_lists(self, boardId):
@@ -68,7 +68,7 @@ class real_trello_request_handler(trello_request_handler):
     def add_new_card(self, cardName, listId):
         payload = {'name': cardName, 'idList': listId, 'key': self.key, 'token' : self.token}
         r = requests.post(f"{self.trello_url}/1/cards", payload)
-        self.logger.info(f'add_new_card: {r.url} => {r.status_code}')
+        self.logger.info(f'add_new_card: {cardName} {r.url} => {r.status_code}')
 
     def delete_card(self, cardId):
         r = requests.delete(f"{self.trello_url}/1/cards/{cardId}?key={self.key}&token={self.token}")
@@ -77,7 +77,7 @@ class real_trello_request_handler(trello_request_handler):
     def create_board(self, boardName):
         payload = {'name': boardName, 'key': self.key, 'token' : self.token}
         r = requests.post(f"{self.trello_url}/1/boards", payload)
-        self.logger.info(f'create_board: {r.url} => {r.status_code}')
+        self.logger.info(f'create_board: {boardName} {r.url} => {r.status_code}')
 
     def delete_board(self, boardId):
         r = requests.delete(f"{self.trello_url}/1/boards/{boardId}?key={self.key}&token={self.token}")
