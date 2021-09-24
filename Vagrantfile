@@ -120,7 +120,7 @@ Vagrant.configure("2") do |config|
 	 #trigger.run_remote = {privileged: false, inline: "cd /vagrant && ./setup_on_vagrant.sh && ./run_gunicorn.sh"}
 	 trigger.run_remote = {privileged: false, inline: "
 	 # Install dependencies and launch
-	 cd /vagrant && poetry install && cd /vagrant/todo_app && nohup poetry run flask run > logs.txt 2>&1 &
+	 cd /vagrant && poetry install && cd /vagrant/todo_app && nohup poetry run flask run --host=0.0.0.0 > logs.txt 2>&1 &
 	 "}
   end  
   
