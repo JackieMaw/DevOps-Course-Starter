@@ -4,6 +4,8 @@ import os
 from dotenv import load_dotenv
 from todo_app.viewmodel import ViewModel
 
+import logging
+
 def init_repository(logger):        
     key = os.getenv('TRELLO_KEY')
     token = os.getenv('TRELLO_TOKEN')
@@ -11,8 +13,10 @@ def init_repository(logger):
 
 def create_app(): 
     app = Flask(__name__)
+    logging.basicConfig(filename='C:\\Work\\Module3\\DevOps-Course-Starter\\todo_app\\logs\\app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
     app.config.from_object('todo_app.flask_config.Config')
-    repository = init_repository(app.logger)
+    repository = init_repository(app.logger)    
+    logging.info('create_app() completed')
 
     @app.route('/')
     def index():

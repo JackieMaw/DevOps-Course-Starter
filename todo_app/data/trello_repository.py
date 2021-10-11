@@ -14,7 +14,7 @@ class trello_repository(task_repository):
         self.loaded = False
 
     def __load(self):        
-        workspace_name = os.getenv('TRELLO_BOARD_NAME') #TODO - i don't like this from here...
+        workspace_name = os.getenv('TRELLO_BOARD_NAME')
         board = self.request_handler.get_board(workspace_name)
         self.boardid = board["id"]
         allLists = self.request_handler.get_all_lists(self.boardid)
@@ -23,8 +23,9 @@ class trello_repository(task_repository):
         self.loaded = True
 
     def get_tasks(self):
-        if not self.loaded:
-            self.__load()
+        #for some reason this caching is causing the tests to break... TODO investigate further
+        #if not self.loaded:
+        self.__load()
         allCards = self.request_handler.get_all_cards(self.boardid)
         alltasks = [self.__transform_card_to_task(card) for card in allCards]
         return alltasks
