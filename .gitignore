@@ -121,3 +121,7 @@ env/
 
 ###VAGRANT###
 .vagrant/
+
+### OTHER FILES ###
+*.log
+*.exe
