@@ -119,6 +119,9 @@ env/
 ### Configuration files ###
 .env
 
+###VAGRANT###
+.vagrant/
+
 ### OTHER FILES ###
 *.log
 *.exe
