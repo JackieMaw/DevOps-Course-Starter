@@ -87,9 +87,19 @@ To run the integration tests, run:
 $ poetry run pytest "todo_app\tests_e2e\test_integration_e2e.py"
 ```
 
-## Launch within a VM
+## Launch within a Virtual Machine
 
 The application can also be launched from the Vagrantfile which will setup port-forwarding from the VM port 5000 to the host machine port 5000
 
 Trouble-shooting note:
 Before the VM is provisioned, the .env file must be generated with the appropriate Trello token
+
+## Launch within a Container
+
+The application can also be launched from docker using the Dockerfile:
+
+```bash
+$ docker build --tag do-me 
+$ docker run --env-file ./.env -it --publish 5000:5000  do-me
+```
+ 
