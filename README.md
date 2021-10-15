@@ -99,11 +99,8 @@ Before the VM is provisioned, the .env file must be generated with the appropria
 The application can also be launched from docker using the Dockerfile:
 
 ```bash
-$ docker build --tag do-me 
-$ docker run --env-file ./.env -it --publish 5000:5000  do-me
-
 $ docker build --target development --tag do-me:dev .
-$ docker run --env-file ./.env -it --publish 5000:5000  do-me:dev
+$ docker run --env-file ./.env -it --publish 5000:5000 --mount type=bind,source="$(pwd)"/todo_app,target=/do-me/todo_app do-me:dev
 
 $ docker build --target production --tag do-me:prod .
 $ docker run --env-file ./.env -it --publish 5000:5000  do-me:prod
