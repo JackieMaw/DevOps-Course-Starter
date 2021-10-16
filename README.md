@@ -85,19 +85,16 @@ You need to copy geckodriver.exe into the root of your project and add the gecko
 
 ## Running the Tests
 
-The unit tests and the integration tests cannot be run concurrently, because the shared global variables interfere with each other.
-
-To run the unit tests, run:
+To run the unit tests and integration tests, run:
 
 ```bash
-$ poetry run pytest "todo_app\tests\"
+$ poetry run pytest
 ```
 
-To run the integration tests, run:
+Troubleshooting note - if you get this error:
+        ERROR todo_app/tests_e2e/test_integration_e2e_selenium.py::test_task_journey - selenium.common.exceptions.WebDriverException: Message: 'geckodriver' executable needs to be in PATcf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb3H.
+Copy copy geckodriver.exe into the root of your project
 
-```bash
-$ poetry run pytest "todo_app\tests_e2e\test_integration_e2e.py"
-```
 
 ## Launch within a Virtual Machine
 
