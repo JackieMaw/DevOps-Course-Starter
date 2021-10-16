@@ -47,7 +47,7 @@ In order to set this up, please do the following:
         TRELLO_BOARD_NAME=ToDoApp
 
 
-## Running the App
+## Running the App with Flask
 
 Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
 ```bash
@@ -65,6 +65,18 @@ You should see output similar to the following:
  * Debugger PIN: 226-556-590
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+
+## Running the App with Gunicorn - HELP! This does not work... how do I use the Ubuntu shell?
+
+Install gunicorn:
+```bash
+$ pip install gunicorn
+```
+
+Once the all dependencies have been installed, launch from gunicorn within the poetry environment by running in an Ubuntu shell:
+```bash
+$ gunicorn --bind 0.0.0.0:5000 wsgi:app
+```
 
 ## Setting up the Tests
 
@@ -100,9 +112,9 @@ The application can also be launched from docker using the Dockerfile:
 
 ```bash
 $ docker build --target development --tag do-me:dev .
-$ docker run --env-file ./.env -it --publish 5000:5000 --mount type=bind,source="$(pwd)"/todo_app,target=/do-me/todo_app do-me:dev
+$ docker run --env-file ./.env -d --publish 5000:5000 --mount type=bind,source="$(pwd)"/todo_app,target=/do-me/todo_app do-me:dev
 
 $ docker build --target production --tag do-me:prod .
-$ docker run --env-file ./.env -it --publish 5000:5000  do-me:prod
+$ docker run --env-file ./.env -d --publish 5000:5000 do-me:prod
 ```
  
