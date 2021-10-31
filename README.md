@@ -68,9 +68,9 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 ## Running the App with Gunicorn
 
-Once the all dependencies have been installed, launch from gunicorn within the poetry environment by running in an Ubuntu shell:
+Once the all dependencies have been installed, launch from gunicorn within the poetry environment by running:
 ```bash
-$ gunicorn --bind 0.0.0.0:5000 wsgi:app
+$ poetry run gunicorn --bind 0.0.0.0:5000 todo_app.app:create_app
 ```
 
 ## Setting up the Tests
