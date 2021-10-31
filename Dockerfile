@@ -14,3 +14,6 @@ ENTRYPOINT ["./run_gunicorn.sh"]
 FROM base as development
 COPY ./run_flask.sh ./run_flask.sh
 ENTRYPOINT ["./run_flask.sh"]
+
+FROM base as test
+ENTRYPOINT ["poetry", "run", "pytest"]
