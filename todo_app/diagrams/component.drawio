@@ -1,0 +1,46 @@
+<mxfile host="app.diagrams.net" modified="2021-10-09T14:00:19.938Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36 Edg/94.0.992.31" etag="CrluZjuCScoX9D3XJMBU" version="15.5.0" type="github">
+  <diagram id="UARD5lfIkczkwRzNJLXB" name="Page-1">
+    <mxGraphModel dx="864" dy="1756" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-5" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="21" width="760" height="269" as="geometry" />
+        </mxCell>
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=15;" parent="1" source="zSYbzivvnAXnJtvJsFFF-3" target="zSYbzivvnAXnJtvJsFFF-15" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-3" value="Trello Request Handler" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="300" y="210" width="240" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-6" value="&lt;h1&gt;Component Diagram: ToDo Web Application&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="10" y="430" width="560" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="VHPxu2DGKvhJzw0kS8_n-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=15;" edge="1" parent="1" source="zSYbzivvnAXnJtvJsFFF-9" target="zSYbzivvnAXnJtvJsFFF-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-9" value="&lt;font style=&quot;font-size: 15px&quot;&gt;Multi-page Web Application&lt;/font&gt;&lt;br&gt;Python" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="240" y="41" width="360" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=15;" parent="1" source="zSYbzivvnAXnJtvJsFFF-10" target="zSYbzivvnAXnJtvJsFFF-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-10" value="&lt;font style=&quot;font-size: 15px&quot;&gt;Web Server&lt;/font&gt;&lt;br&gt;Flask" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="240" y="-39" width="360" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" parent="1" source="zSYbzivvnAXnJtvJsFFF-13" target="zSYbzivvnAXnJtvJsFFF-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-13" value="Trello Repository" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="360" y="121" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-15" value="&lt;span&gt;&lt;font style=&quot;font-size: 15px&quot;&gt;Trello&lt;/font&gt;&lt;br&gt;REST API, JSON&lt;br&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="240" y="350" width="360" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="zSYbzivvnAXnJtvJsFFF-17" value="ToDo Web Application" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;" parent="1" vertex="1">
+          <mxGeometry x="16" y="-9" width="220" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
