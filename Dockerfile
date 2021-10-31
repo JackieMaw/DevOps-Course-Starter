@@ -9,7 +9,7 @@ EXPOSE 5000
 
 FROM base as production
 COPY ./run_gunicorn.sh ./run_gunicorn.sh
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["./run_gunicorn.sh"]
 
 FROM base as development
 COPY ./run_flask.sh ./run_flask.sh

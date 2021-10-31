@@ -66,12 +66,7 @@ You should see output similar to the following:
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
-## Running the App with Gunicorn - HELP! This does not work... how do I use the Ubuntu shell?
-
-Install gunicorn:
-```bash
-$ pip install gunicorn
-```
+## Running the App with Gunicorn
 
 Once the all dependencies have been installed, launch from gunicorn within the poetry environment by running in an Ubuntu shell:
 ```bash
@@ -113,5 +108,11 @@ $ docker run --env-file ./.env -d --publish 5000:5000 --mount type=bind,source="
 
 $ docker build --target production --tag do-me:prod .
 $ docker run --env-file ./.env -d --publish 5000:5000 do-me:prod
+```
+
+To launch in interactive mode add the -it flag:
+```bash
+$ docker run --env-file ./.env -it --publish 5000:5000 --mount type=bind,source="$(pwd)"/todo_app,target=/do-me/todo_app do-me:dev
+$ docker run --env-file ./.env -it --publish 5000:5000 do-me:prod
 ```
  
