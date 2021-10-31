@@ -47,7 +47,7 @@ In order to set this up, please do the following:
         TRELLO_BOARD_NAME=ToDoApp
 
 
-## Running the App
+## Running the App with Flask
 
 Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
 ```bash
@@ -66,6 +66,13 @@ You should see output similar to the following:
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
+## Running the App with Gunicorn
+
+Once the all dependencies have been installed, launch from gunicorn within the poetry environment by running:
+```bash
+$ poetry run gunicorn --bind 0.0.0.0:5000 todo_app.app:create_app
+```
+
 ## Setting up the Tests
 
 You need to install Mozilla Firefox and download geckodriver.exe.
@@ -73,23 +80,39 @@ You need to copy geckodriver.exe into the root of your project and add the gecko
 
 ## Running the Tests
 
-The unit tests and the integration tests cannot be run concurrently, because the shared global variables interfere with each other.
-
-To run the unit tests, run:
+To run the unit tests and integration tests, run:
 
 ```bash
-$ poetry run pytest "todo_app\tests\"
+$ poetry run pytest
 ```
 
-To run the integration tests, run:
+Troubleshooting note - if you get this error:
+        ERROR todo_app/tests_e2e/test_integration_e2e_selenium.py::test_task_journey - selenium.common.exceptions.WebDriverException: Message: 'geckodriver' executable needs to be in PATcf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb3H.
+Copy copy geckodriver.exe into the root of your project
 
-```bash
-$ poetry run pytest "todo_app\tests_e2e\test_integration_e2e.py"
-```
 
-## Launch within a VM
+## Launch within a Virtual Machine
 
 The application can also be launched from the Vagrantfile which will setup port-forwarding from the VM port 5000 to the host machine port 5000
 
 Trouble-shooting note:
 Before the VM is provisioned, the .env file must be generated with the appropriate Trello token
+
+## Launch within a Container
+
+The application can also be launched from docker using the Dockerfile:
+
+```bash
+$ docker build --target development --tag do-me:dev .
+$ docker run --env-file ./.env -d --publish 5000:5000 --mount type=bind,source="$(pwd)"/todo_app,target=/do-me/todo_app do-me:dev
+
+$ docker build --target production --tag do-me:prod .
+$ docker run --env-file ./.env -d --publish 5000:5000 do-me:prod
+```
+
+To launch in interactive mode add the -it flag:
+```bash
+$ docker run --env-file ./.env -it --publish 5000:5000 --mount type=bind,source="$(pwd)"/todo_app,target=/do-me/todo_app do-me:dev
+$ docker run --env-file ./.env -it --publish 5000:5000 do-me:prod
+```
+ 
