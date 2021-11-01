@@ -10,3 +10,6 @@ jobs:
 
     - name: Build Docker Image do-me:test
       run: docker build --target test --tag do-me:test .
+
+    - name: Launch Docker container do-me:test and run tests
+      run: docker run -e TRELLO_KEY=${{ secrets.TRELLO_KEY }} -e TRELLO_TOKEN=${{ secrets.TRELLO_TOKEN }} -e TRELLO_BOARD_NAME=${{ secrets.TRELLO_BOARD_NAME }} -d do-me:test todo_app/tests
