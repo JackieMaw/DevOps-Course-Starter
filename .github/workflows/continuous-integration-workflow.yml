@@ -1,5 +1,11 @@
 name: Continuous Integration
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - 'todo_app/diagrams/**'
+  pull_request:
+    paths-ignore:
+      - 'todo_app/diagrams/**'
 
 jobs:
   build:
