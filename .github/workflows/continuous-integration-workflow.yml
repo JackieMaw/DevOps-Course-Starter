@@ -12,7 +12,7 @@ jobs:
       run: docker build --target test --tag do-me:test .
 
     - name: Launch Docker container do-me:test and run unit tests
-      run: docker run -d do-me:test todo_app/tests
+      run: docker run -i do-me:test todo_app/tests
 
     - name: Launch Docker container do-me:test and run e2e tests
-      run: docker run -e TRELLO_KEY=${{ secrets.TRELLO_KEY }} -e TRELLO_TOKEN=${{ secrets.TRELLO_TOKEN }} -e TRELLO_BOARD_NAME=${{ secrets.TRELLO_BOARD_NAME }} -d do-me:test todo_app/tests_e2e
+      run: docker run -e TRELLO_KEY=${{ secrets.TRELLO_KEY }} -e TRELLO_TOKEN=${{ secrets.TRELLO_TOKEN }} -e TRELLO_BOARD_NAME=${{ secrets.TRELLO_BOARD_NAME }} -i do-me:test todo_app/tests_e2e

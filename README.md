@@ -110,7 +110,7 @@ $ docker build --target production --tag do-me:prod .
 $ docker run --env-file ./.env -d --publish 5000:5000 do-me:prod
 
 $ docker build --target test --tag do-me:test .
-$ docker run -it do-me:test todo_app/tests
+$ docker run --env-file ./.env -it do-me:test todo_app/tests
 ```
 
 To launch in interactive mode add the -it flag:
