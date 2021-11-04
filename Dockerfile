@@ -17,3 +17,6 @@ ENTRYPOINT ["./run_flask.sh"]
 
 FROM base as test
 ENTRYPOINT ["poetry", "run", "pytest"]
+
+FROM base as exp
+ENTRYPOINT ["/bin/bash"]
