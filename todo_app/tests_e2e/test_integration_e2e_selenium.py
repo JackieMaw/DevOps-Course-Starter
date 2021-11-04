@@ -43,9 +43,13 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 
-@pytest.fixture
+from selenium.webdriver.firefox.options import Options
+
+@pytest.fixture(scope='module')
 def driver():
-    with webdriver.Firefox() as driver:
+    opts = Options()
+    opts.headless = True
+    with webdriver.Firefox(options=opts) as driver:
         yield driver
 
 def test_task_journey(driver : webdriver.Firefox, app_with_temp_board):
