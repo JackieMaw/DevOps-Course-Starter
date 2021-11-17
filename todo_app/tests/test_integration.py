@@ -62,8 +62,8 @@ def client():
         yield client
 
 @patch('requests.get')
-def test_index_page(mock_get_requests, client):
-    mock_get_requests.side_effect = mock_requests_get
+def test_index_page(requests_get, client):
+    requests_get.side_effect = get_mock_requests_get
     response = client.get('/')
 
     assert "CARD_ID_1" in str(response.data)
@@ -74,13 +74,13 @@ def test_index_page(mock_get_requests, client):
 @patch('requests.delete')
 @patch('requests.get')
 def test_delete_page(requests_get, requests_delete, client):
-    requests_get.side_effect = mock_requests_get
-    requests_delete.side_effect = mock_requests_delete
+    requests_get.side_effect = get_mock_requests_get
+    requests_delete.side_effect = get_mock_requests_delete
     response = client.post('/delete/CARD_ID_1')
     
     requests_delete.assert_called_with('https://api.trello.com/1/cards/CARD_ID_1?key=FAKE_KEY&token=FAKE_TOKEN')
 
-def mock_requests_get(url, params):    
+def get_mock_requests_get(url, params):    
     print(f'MOCK requests.get: {url}')
     if url == 'https://api.trello.com/1/members/me/boards':
         response = Mock()
@@ -105,7 +105,7 @@ def mock_requests_get(url, params):
         raise ValueError (f'url not supported by Mock: {url}')
 
 
-def mock_requests_delete(url):    
+def get_mock_requests_delete(url):    
     print(f'MOCK requests.delete: {url}')
     if url == 'https://api.trello.com/1/cards/CARD_ID_1?key=FAKE_KEY&token=FAKE_TOKEN':
         response = Mock()

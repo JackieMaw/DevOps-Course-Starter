@@ -83,12 +83,12 @@ You need to copy geckodriver.exe into the root of your project and add the gecko
 To run the unit tests and integration tests, run:
 
 ```bash
-$ poetry run pytest
+$ poetry run pytest --log-cli-level=INFO
 ```
 
 Troubleshooting note - if you get this error:
         ERROR todo_app/tests_e2e/test_integration_e2e_selenium.py::test_task_journey - selenium.common.exceptions.WebDriverException: Message: 'geckodriver' executable needs to be in PATcf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb3H.
-Copy copy geckodriver.exe into the root of your project
+Copy geckodriver.exe into the root of your project
 
 
 ## Launch within a Virtual Machine
@@ -108,6 +108,13 @@ $ docker run --env-file ./.env -d --publish 5000:5000 --mount type=bind,source="
 
 $ docker build --target production --tag do-me:prod .
 $ docker run --env-file ./.env -d --publish 5000:5000 do-me:prod
+
+$ docker build --target test --tag do-me:test .
+$ docker run --env-file ./.env -it do-me:test todo_app/tests
+
+$ docker build --target exp --tag do-me:experiment .
+$ docker run -it do-me:experiment
+
 ```
 
 To launch in interactive mode add the -it flag:

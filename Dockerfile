@@ -14,3 +14,17 @@ ENTRYPOINT ["./run_gunicorn.sh"]
 FROM base as development
 COPY ./run_flask.sh ./run_flask.sh
 ENTRYPOINT ["./run_flask.sh"]
+
+FROM base as test
+
+ENV GECKODRIVER_VER v0.29.1
+RUN apt-get install -y firefox-esr curl
+RUN curl -sSLO https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VER}/geckodriver-${GECKODRIVER_VER}-linux64.tar.gz \
+ && tar zxf geckodriver-*.tar.gz \
+ && mv geckodriver /usr/bin/ \
+ && rm geckodriver-*.tar.gz
+
+ENTRYPOINT ["poetry", "run", "pytest"]
+
+FROM base as exp
+ENTRYPOINT ["/bin/bash"]
