@@ -22,3 +22,23 @@ jobs:
 
     - name: Launch Docker container do-me:test and run e2e tests
       run: docker run -e TRELLO_KEY=${{ secrets.TRELLO_KEY }} -e TRELLO_TOKEN=${{ secrets.TRELLO_TOKEN }} -e TRELLO_BOARD_NAME=${{ secrets.TRELLO_BOARD_NAME }} -i do-me:test todo_app/tests_e2e
+       
+       
+       docker push jackiemaw/dome:tagname
+jobs:
+  deploy:
+    name: Deploy to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+    
+    - name: Build Docker Image do-me:prod
+      run: docker build --target production --tag do-me:prod .
+
+    - name: Push Docker Image to DockerHub
+      run: docker push do-me:prod
+       
