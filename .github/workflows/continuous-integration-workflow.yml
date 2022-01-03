@@ -8,26 +8,26 @@ on:
       - 'todo_app/diagrams/**'
 
 jobs:
- # build:
- #   name: Build and test
- #   runs-on: ubuntu-latest
- #   steps:
- #   - uses: actions/checkout@v2
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
 
- #   - name: Build Docker Image do-me:test
- #     run: docker build --target test --tag do-me:test .
+    - name: Build Docker Image do-me:test
+      run: docker build --target test --tag do-me:test .
 
- #   - name: Launch Docker container do-me:test and run unit tests
- #     run: docker run -e TRELLO_KEY=FAKE_KEY -e TRELLO_TOKEN=FAKE_TOKEN -e TRELLO_BOARD_NAME=ToDoApp -i do-me:test todo_app/tests
+    - name: Launch Docker container do-me:test and run unit tests
+      run: docker run -e TRELLO_KEY=FAKE_KEY -e TRELLO_TOKEN=FAKE_TOKEN -e TRELLO_BOARD_NAME=ToDoApp -i do-me:test todo_app/tests
 
- #   - name: Launch Docker container do-me:test and run e2e tests
- #     run: docker run -e TRELLO_KEY=${{ secrets.TRELLO_KEY }} -e TRELLO_TOKEN=${{ secrets.TRELLO_TOKEN }} -e TRELLO_BOARD_NAME=${{ secrets.TRELLO_BOARD_NAME }} -i do-me:test todo_app/tests_e2e
+    - name: Launch Docker container do-me:test and run e2e tests
+      run: docker run -e TRELLO_KEY=${{ secrets.TRELLO_KEY }} -e TRELLO_TOKEN=${{ secrets.TRELLO_TOKEN }} -e TRELLO_BOARD_NAME=${{ secrets.TRELLO_BOARD_NAME }} -i do-me:test todo_app/tests_e2e
     
   deploy:
     name: Deploy to Docker Hub
     if: ${{ github.ref == 'refs/heads/exercise-8' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
-    #needs: build
+    needs: build
     steps:   
     - 
         uses: actions/checkout@v2     
