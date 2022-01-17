@@ -125,11 +125,11 @@ $ docker run --env-file ./.env -it --publish 5000:5000 do-me:prod
  
 ## Deployed to Heroku
 
-The application can be manually deployed to Heroku:
+The application will be automatically deployed to Heroku by GitHub Actions:
 
 https://jackiemaw-do-me.herokuapp.com/
 
-Instructions:
+Instructions for manual deploy:
 
 ```bash
 $ heroku login
