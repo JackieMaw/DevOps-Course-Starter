@@ -1,4 +1,5 @@
 import pytest
+from dotenv import load_dotenv, find_dotenv
 from unittest.mock import Mock, patch
 from todo_app.data import mongodb_repository
 from todo_app.data.mongodb_repository import mongodb_repository
@@ -7,41 +8,29 @@ import string
 import logging
 import pymongo
 from threading import Thread
-
 from todo_app.data.task import TaskStatus
+import mongomock 
 
-connection_string = "mongodb+srv://jmaw1:ppppp@cluster0.5vzof.mongodb.net/doMeDatabase?retryWrites=true&w=majority"
+connection_string = "mongodb://fakemongo.com"
 
 @pytest.fixture(scope='module')
 def testdbname():
-    # pytest runs tests in parallel, so each test must have it's own board
-    dbname = 'doMeTest_' + ''.join(random.choice(string.ascii_letters) for i in range(10))
-    logging.info(f"Creating Test Database: {dbname}")
+    with mongomock.patch(servers=(('fakemongo.com', 27017),)): 
+        dbname = 'doMeTest'
+        logging.info(f"Creating Test Database using mongomock: {dbname}")
 
-    client = pymongo.MongoClient(connection_string)
-    collection = client[dbname]
-    tasks = collection.tasks
+        client = pymongo.MongoClient(connection_string)
+        collection = client[dbname]
+        tasks = collection.tasks
 
-    tasks.insert_one({"Name" : "1. Setup Database", "Status" : "Done"})
-    tasks.insert_one({"Name" : "2. Test Connectivity", "Status" : "Done"})
-    tasks.insert_one({"Name" : "3. Write Integration Tests", "Status" : "Doing"})
-    tasks.insert_one({"Name" : "4. Write Unit Tests with Mocking", "Status" : "ToDo"})
-    tasks.insert_one({"Name" : "5. Switch Over", "Status" : "ToDo"})
-   
-    logging.info(f"Performing Tests On Test Database: {dbname}")
-    yield dbname
-
-    # cleanup
-    logging.info(f"Deleting Test Database: {dbname}")
-    # pymongo.errors.OperationFailure: user is not allowed to do action [dropDatabase] on [doMeTest_YmFytQPMhe.]
-    # Solution: Give User atlasAdmin Role
-    client.drop_database(dbname)
-
-    for old_dbname in client.list_database_names():
-        if old_dbname.startswith("doMeTest_"):            
-            logging.info(f"Deleting OLDER Test Database: {old_dbname}")
-            client.drop_database(old_dbname)
-
+        tasks.insert_one({"Name" : "1. Setup Database", "Status" : "Done"})
+        tasks.insert_one({"Name" : "2. Test Connectivity", "Status" : "Done"})
+        tasks.insert_one({"Name" : "3. Write Integration Tests", "Status" : "Doing"})
+        tasks.insert_one({"Name" : "4. Write Unit Tests with Mocking", "Status" : "ToDo"})
+        tasks.insert_one({"Name" : "5. Switch Over", "Status" : "ToDo"})
+    
+        logging.info(f"Performing Tests On Test Database using mongomock: {dbname}")
+        yield dbname
 
 def test_get_tasks(testdbname):
     repo = mongodb_repository(connection_string, testdbname)

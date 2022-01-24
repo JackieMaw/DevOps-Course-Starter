@@ -14,7 +14,6 @@ connection_string = "mongodb+srv://jmaw1:ppppp@cluster0.5vzof.mongodb.net/doMeDa
 
 @pytest.fixture(scope='module')
 def testdbname():
-    # pytest runs tests in parallel, so each test must have it's own board
     dbname = 'doMeTest_' + ''.join(random.choice(string.ascii_letters) for i in range(10))
     logging.info(f"Creating Test Database: {dbname}")
 
