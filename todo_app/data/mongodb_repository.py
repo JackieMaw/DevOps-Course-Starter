@@ -1,6 +1,7 @@
 from todo_app.data.task_repository import task_repository
 from todo_app.data.task import Task, TaskStatus
 import pymongo
+from bson.objectid import ObjectId
 
 class mongodb_repository(task_repository):
 
@@ -12,17 +13,17 @@ class mongodb_repository(task_repository):
 
     def get_tasks(self):
         # {'_id': ObjectId('61eeb34d8ebddad2827fca27'), 'Name': 'Write Integration Tests', 'Status': 'ToDo'}
-        alltasks = [Task(task["_id"], task["Name"], TaskStatus(task["Status"])) for task in self.tasks_collection.find()]
+        alltasks = [Task(str(task["_id"]), task["Name"], TaskStatus(task["Status"])) for task in self.tasks_collection.find()]
         return alltasks
 
     def add_task(self, name, status):
         self.tasks_collection.insert_one({"Name" : name, "Status" : status})
 
     def update_task_status(self, id, status):
-        filter = { "_id" : id }
+        filter = { "_id" : ObjectId(id) }
         updater = { "$set": {"Status" : status} } 
         self.tasks_collection.update_one(filter, updater)  
 
     def delete_task(self, id):
-        filter = { "_id" : id }
+        filter = { "_id" : ObjectId(id) }
         self.tasks_collection.delete_one(filter)  
