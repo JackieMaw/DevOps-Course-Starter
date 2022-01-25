@@ -34,18 +34,18 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change).
 
-## Storing Data on Trello
+## Storing Data on MongoDb
 
-The application stores the tasks on Trello.
-In order to set this up, please do the following:
-1. Create a trello account here: https://trello.com/signup
-2. Create a workspace (this will be your TRELLO_BOARD_NAME)
-3. View your API Key and generate a Token: https://trello.com/app-key
-5. Set the following values in the .env file:
-        TRELLO_KEY=trello-key
-        TRELLO_TOKEN=trello_token
-        TRELLO_BOARD_NAME=ToDoApp
+The application stores the tasks on MongoDb:
+        cluster0.5vzof.mongodb.net
+        doMeDatabase.tasks
 
+Connection String:
+        mongodb+srv://<username>:<password>@cluster0.5vzof.mongodb.net/doMeDatabase?retryWrites=true&w=majority
+
+Set the following values in the .env file:
+        MONGODB_CONNECTIONSTRING=<connectionstring>
+        MONGODB_DATABASE=doMeDatabase
 
 ## Running the App with Flask
 
@@ -86,6 +86,18 @@ To run the unit tests and integration tests, run:
 $ poetry run pytest --log-cli-level=INFO
 ```
 
+To run only the unit tests, run:
+
+```bash
+$ poetry run pytest .\todo_app\tests --log-cli-level=INFO
+```
+
+To run only the integration tests, run:
+
+```bash
+$ poetry run pytest .\todo_app\tests_e2e --log-cli-level=INFO
+```
+
 Troubleshooting note - if you get this error:
         ERROR todo_app/tests_e2e/test_integration_e2e_selenium.py::test_task_journey - selenium.common.exceptions.WebDriverException: Message: 'geckodriver' executable needs to be in PATcf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb3H.
 Copy geckodriver.exe into the root of your project
@@ -96,7 +108,7 @@ Copy geckodriver.exe into the root of your project
 The application can also be launched from the Vagrantfile which will setup port-forwarding from the VM port 5000 to the host machine port 5000
 
 Trouble-shooting note:
-Before the VM is provisioned, the .env file must be generated with the appropriate Trello token
+Before the VM is provisioned, the .env file must be generated with the appropriate MONGODB tokens
 
 ## Launch within a Container
 

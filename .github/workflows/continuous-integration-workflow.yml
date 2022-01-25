@@ -18,7 +18,7 @@ jobs:
       run: docker build --target test --tag do-me:test .
 
     - name: Launch Docker container do-me:test and run unit tests
-      run: docker run -e TRELLO_KEY=FAKE_KEY -e TRELLO_TOKEN=FAKE_TOKEN -e TRELLO_BOARD_NAME=ToDoApp -i do-me:test todo_app/tests
+      run: docker run -e MONGODB_CONNECTIONSTRING=FAKE_CONNECTIONSTRING -e MONGODB_DATABASE=doMeDatabase -i do-me:test todo_app/tests
 
     - name: Launch Docker container do-me:test and run e2e tests
-      run: docker run -e TRELLO_KEY=${{ secrets.TRELLO_KEY }} -e TRELLO_TOKEN=${{ secrets.TRELLO_TOKEN }} -e TRELLO_BOARD_NAME=${{ secrets.TRELLO_BOARD_NAME }} -i do-me:test todo_app/tests_e2e
+      run: docker run -e MONGODB_CONNECTIONSTRING=${{ secrets.MONGODB_CONNECTIONSTRING }} -e MONGODB_DATABASE=doMeDatabase -i do-me:test todo_app/tests_e2e

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, request
-from todo_app.data.trello_repository import trello_repository
+from todo_app.data.mongodb_repository import mongodb_repository
 import os
 from dotenv import load_dotenv
 from todo_app.viewmodel import ViewModel
@@ -7,9 +7,9 @@ from todo_app.viewmodel import ViewModel
 import logging
 
 def init_repository(logger):        
-    key = os.getenv('TRELLO_KEY')
-    token = os.getenv('TRELLO_TOKEN')
-    return trello_repository(key, token, logger)
+    connectionstring = os.getenv('MONGODB_CONNECTIONSTRING')
+    dbname = os.getenv('MONGODB_DATABASE')
+    return mongodb_repository(connectionstring, dbname)
 
 def create_app(): 
     app = Flask(__name__)

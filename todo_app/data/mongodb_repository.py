@@ -1,7 +1,5 @@
 from todo_app.data.task_repository import task_repository
-from todo_app.data.trello_request_handler import real_trello_request_handler
 from todo_app.data.task import Task, TaskStatus
-import os
 import pymongo
 
 class mongodb_repository(task_repository):
