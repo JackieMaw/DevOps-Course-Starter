@@ -14,7 +14,10 @@ def testdbname():
     dbname = 'doMeTest_' + ''.join(random.choice(string.ascii_letters) for i in range(10))
     logging.info(f"Creating Test Database: {dbname}")
 
+    logging.info(f"Connecting to MongoDB...")
     client = pymongo.MongoClient(connection_string)
+    logging.info(f"Connection Successful.")
+    
     collection = client[dbname]
     tasks = collection.tasks
 

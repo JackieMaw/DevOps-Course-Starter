@@ -24,7 +24,7 @@ def create_app():
             app.logger.info("index()")
             tasks = repository.get_tasks()
             app.logger.info(f"index() => {len(tasks)} tasks retrieved from repository")
-            view_model = ViewModel(tasks, repository.description)
+            view_model = ViewModel(tasks)
             response = render_template('index.html', view_model=view_model) 
             return response
         except Exception as e:

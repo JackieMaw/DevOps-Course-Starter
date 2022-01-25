@@ -20,9 +20,13 @@ def app_with_temp_board():
     connection_string = os.getenv('MONGODB_CONNECTIONSTRING')
     dbname = os.getenv('MONGODB_DATABASE')
 
+    logging.info(f"Connecting to MongoDB...")
     client = pymongo.MongoClient(connection_string)
+    logging.info(f"Connection Successful.")
+
     collection = client[dbname]
     tasks = collection.tasks
+
 
     tasks.insert_one({"Name" : "1. Setup Database", "Status" : "Done"})
     tasks.insert_one({"Name" : "2. Test Connectivity", "Status" : "Done"})
