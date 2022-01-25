@@ -37,7 +37,7 @@ def create_app():
             app.logger.info("add_new_task()")
             task_name = request.form["task_name"]
             app.logger.info(f"add_new_task() => {task_name}")
-            repository.add_task(task_name, "To Do")
+            repository.add_task(task_name, "ToDo")
             return redirect('/')
         except Exception as e:
             app.logger.error("Error: %s", e)
