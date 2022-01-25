@@ -1,13 +1,8 @@
 import pytest
-from dotenv import load_dotenv, find_dotenv
-from unittest.mock import Mock, patch
 from todo_app.data import mongodb_repository
 from todo_app.data.mongodb_repository import mongodb_repository
-import random
-import string
 import logging
 import pymongo
-from threading import Thread
 from todo_app.data.task import TaskStatus
 import mongomock 
 
