@@ -27,12 +27,11 @@ def app_with_temp_board():
     collection = client[dbname]
     tasks = collection.tasks
 
-
-    tasks.insert_one({"Name" : "1. Setup Database", "Status" : "Done"})
-    tasks.insert_one({"Name" : "2. Test Connectivity", "Status" : "Done"})
-    tasks.insert_one({"Name" : "3. Write Integration Tests", "Status" : "Doing"})
-    tasks.insert_one({"Name" : "4. Write Unit Tests with Mocking", "Status" : "ToDo"})
-    tasks.insert_one({"Name" : "5. Switch Over", "Status" : "ToDo"})
+    # tasks.insert_one({"Name" : "1. Setup Database", "Status" : "Done"})
+    # tasks.insert_one({"Name" : "2. Test Connectivity", "Status" : "Done"})
+    # tasks.insert_one({"Name" : "3. Write Integration Tests", "Status" : "Doing"})
+    # tasks.insert_one({"Name" : "4. Write Unit Tests with Mocking", "Status" : "ToDo"})
+    # tasks.insert_one({"Name" : "5. Switch Over", "Status" : "ToDo"})
    
     logging.info(f"Performing Tests On Test Database: {dbname}")
     
