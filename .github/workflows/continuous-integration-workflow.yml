@@ -18,7 +18,7 @@ jobs:
       run: docker build --target test --tag do-me:test .
 
     - name: Launch Docker container do-me:test and run unit tests
-      run: docker run -e MONGODB_CONNECTIONSTRING=${{ secrets.MONGODB_CONNECTIONSTRING }} -e MONGODB_DATABASE=doMeDatabase -i do-me:test todo_app/tests
+      run: docker run -e MONGODB_CONNECTIONSTRING=FAKE_CONNECTIONSTRING -e MONGODB_DATABASE=doMeDatabase -i do-me:test todo_app/tests
 
     - name: Launch Docker container do-me:test and run e2e tests
       run: docker run -e MONGODB_CONNECTIONSTRING=${{ secrets.MONGODB_CONNECTIONSTRING }} -e MONGODB_DATABASE=doMeDatabase -i do-me:test todo_app/tests_e2e
