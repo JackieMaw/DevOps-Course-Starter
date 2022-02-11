@@ -1,3 +1,4 @@
+import os
 import pytest
 from todo_app.data.mongodb_repository import mongodb_repository
 import random
@@ -9,13 +10,12 @@ from dotenv import load_dotenv
 from todo_app.data.task import TaskStatus
 
 @pytest.fixture(scope='module')
-def testdbname():
+def testdb():
     dbname = 'doMeTest_' + ''.join(random.choice(string.ascii_letters) for i in range(10))
     logging.info(f"Creating Test Database: {dbname}")
 
     load_dotenv(override=True)
     os.environ['MONGODB_DATABASE'] = dbname
-    application = app.create_app()
     connection_string = os.getenv('MONGODB_CONNECTIONSTRING')
     dbname = os.getenv('MONGODB_DATABASE')
 
@@ -33,7 +33,7 @@ def testdbname():
     tasks.insert_one({"Name" : "5. Switch Over", "Status" : "ToDo"})
    
     logging.info(f"Performing Tests On Test Database: {dbname}")
-    yield dbname
+    yield (connection_string, dbname)
 
     # cleanup
     logging.info(f"Deleting Test Database: {dbname}")
@@ -47,7 +47,8 @@ def testdbname():
             client.drop_database(old_dbname)
 
 
-def test_get_tasks(testdbname):
+def test_get_tasks(testdb):
+    (connection_string, testdbname) = testdb
     repo = mongodb_repository(connection_string, testdbname)
     tasks = repo.get_tasks()
     
@@ -56,7 +57,9 @@ def test_get_tasks(testdbname):
     assert task3.status == TaskStatus.Doing
 
 
-def test_update_task(testdbname):
+def test_update_task(testdb):
+    
+    (connection_string, testdbname) = testdb
     repo = mongodb_repository(connection_string, testdbname)
     tasks = repo.get_tasks()
     task3 = next(task for task in tasks if task.name == "3. Write Integration Tests") 
@@ -67,7 +70,7 @@ def test_update_task(testdbname):
     task3 = next(task for task in tasks if task.name == "3. Write Integration Tests") 
     assert task3.status == TaskStatus.Done
 
-     repo = mongodb_repository(connection_string, testdbname)
+    repo = mongodb_repository(connection_string, testdbname)
     tasks = repo.get_tasks()
     task3 = next(task for task in tasks if task.name == "3. Write Integration Tests") 
 
