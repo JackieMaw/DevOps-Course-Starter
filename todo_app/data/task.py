@@ -1,7 +1,7 @@
 from enum import Enum
 
 class TaskStatus(Enum):
-    ToDo = "To Do"
+    ToDo = "ToDo"
     Doing = "Doing"
     Done = "Done"
 
