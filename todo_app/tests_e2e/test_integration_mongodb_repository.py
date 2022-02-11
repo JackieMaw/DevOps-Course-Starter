@@ -4,15 +4,20 @@ import random
 import string
 import logging
 import pymongo
+from dotenv import load_dotenv
 
 from todo_app.data.task import TaskStatus
-
-connection_string = "mongodb+srv://jmaw1:ppppp@cluster0.5vzof.mongodb.net/doMeDatabase?retryWrites=true&w=majority"
 
 @pytest.fixture(scope='module')
 def testdbname():
     dbname = 'doMeTest_' + ''.join(random.choice(string.ascii_letters) for i in range(10))
     logging.info(f"Creating Test Database: {dbname}")
+
+    load_dotenv(override=True)
+    os.environ['MONGODB_DATABASE'] = dbname
+    application = app.create_app()
+    connection_string = os.getenv('MONGODB_CONNECTIONSTRING')
+    dbname = os.getenv('MONGODB_DATABASE')
 
     logging.info(f"Connecting to MongoDB...")
     client = pymongo.MongoClient(connection_string)
@@ -62,8 +67,7 @@ def test_update_task(testdbname):
     task3 = next(task for task in tasks if task.name == "3. Write Integration Tests") 
     assert task3.status == TaskStatus.Done
 
-def test_delete_task(testdbname):
-    repo = mongodb_repository(connection_string, testdbname)
+     repo = mongodb_repository(connection_string, testdbname)
     tasks = repo.get_tasks()
     task3 = next(task for task in tasks if task.name == "3. Write Integration Tests") 
 

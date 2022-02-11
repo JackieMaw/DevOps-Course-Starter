@@ -1,7 +1,7 @@
 import os
 from threading import Thread
 import pytest
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 from todo_app import app
 import random
 import string
