@@ -12,7 +12,6 @@ class mongodb_repository(task_repository):
         self.tasks_collection = self.client[self.dbname].tasks
 
     def get_tasks(self):
-        # {'_id': ObjectId('61eeb34d8ebddad2827fca27'), 'Name': 'Write Integration Tests', 'Status': 'ToDo'}
         alltasks = [Task(str(task["_id"]), task["Name"], TaskStatus(task["Status"])) for task in self.tasks_collection.find()]
         return alltasks
 
