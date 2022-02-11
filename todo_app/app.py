@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, request
-from todo_app.data.trello_repository import trello_repository
+from todo_app.data.mongodb_repository import mongodb_repository
 import os
 from dotenv import load_dotenv
 from todo_app.viewmodel import ViewModel
@@ -7,9 +7,9 @@ from todo_app.viewmodel import ViewModel
 import logging
 
 def init_repository(logger):        
-    key = os.getenv('TRELLO_KEY')
-    token = os.getenv('TRELLO_TOKEN')
-    return trello_repository(key, token, logger)
+    connectionstring = os.getenv('MONGODB_CONNECTIONSTRING')
+    dbname = os.getenv('MONGODB_DATABASE')
+    return mongodb_repository(connectionstring, dbname)
 
 def create_app(): 
     app = Flask(__name__)
@@ -24,7 +24,7 @@ def create_app():
             app.logger.info("index()")
             tasks = repository.get_tasks()
             app.logger.info(f"index() => {len(tasks)} tasks retrieved from repository")
-            view_model = ViewModel(tasks, repository.description)
+            view_model = ViewModel(tasks)
             response = render_template('index.html', view_model=view_model) 
             return response
         except Exception as e:
@@ -37,7 +37,7 @@ def create_app():
             app.logger.info("add_new_task()")
             task_name = request.form["task_name"]
             app.logger.info(f"add_new_task() => {task_name}")
-            repository.add_task(task_name, "To Do")
+            repository.add_task(task_name, "ToDo")
             return redirect('/')
         except Exception as e:
             app.logger.error("Error: %s", e)

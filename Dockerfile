@@ -25,6 +25,3 @@ RUN curl -sSLO https://github.com/mozilla/geckodriver/releases/download/${GECKOD
  && rm geckodriver-*.tar.gz
 
 ENTRYPOINT ["poetry", "run", "pytest"]
-
-FROM base as exp
-ENTRYPOINT ["/bin/bash"]

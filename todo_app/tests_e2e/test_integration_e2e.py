@@ -1,34 +1,33 @@
 import os
 from threading import Thread
-from todo_app.data.trello_request_handler import real_trello_request_handler
 import pytest
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 from todo_app import app
 import random
 import string
 import logging
+import pymongo
 
 @pytest.fixture(scope='module')
 def app_with_temp_board():
-    # pytest runs tests in parallel, so each test must have it's own board
-    board_name = 'TEST_BOARD_' + ''.join(random.choice(string.ascii_letters) for i in range(10))
-    logging.info(f"NEW BOARD NAME FOR TEST => {board_name}")
-    load_dotenv(override=True)
-    os.environ['TRELLO_BOARD_NAME'] = board_name
-    application = app.create_app()
-    key = os.getenv('TRELLO_KEY')
-    token = os.getenv('TRELLO_TOKEN')
-    request_handler = real_trello_request_handler(key, token, application.logger) # don't know how to get logger until app created
+   
+    dbname = 'doMeTest_' + ''.join(random.choice(string.ascii_letters) for i in range(10))
+    logging.info(f"Creating Test Database: {dbname}")
 
-    try:
-         # if the board already exists, delete it
-        board_id = request_handler.get_board(board_name)["id"]
-        request_handler.delete_board(board_id)
-        request_handler.create_board(board_name)
-    except:
-        request_handler.create_board(board_name)
-    finally:
-        board_id = request_handler.get_board(board_name)["id"]
+    load_dotenv(override=True)
+    os.environ['MONGODB_DATABASE'] = dbname
+    application = app.create_app()
+    connection_string = os.getenv('MONGODB_CONNECTIONSTRING')
+    dbname = os.getenv('MONGODB_DATABASE')
+
+    logging.info(f"Connecting to MongoDB...")
+    client = pymongo.MongoClient(connection_string)
+    logging.info(f"Connection Successful.")
+
+    collection = client[dbname]
+    tasks = collection.tasks
+   
+    logging.info(f"Performing Tests On Test Database: {dbname}")
     
     thread = Thread(target=lambda: application.run(use_reloader=False))
     thread.daemon = True
@@ -36,7 +35,18 @@ def app_with_temp_board():
     yield application
 
     thread.join(1)
-    request_handler.delete_board(board_id) # cleanup
+    
+    # cleanup
+    logging.info(f"Deleting Test Database: {dbname}")
+    # Error: pymongo.errors.OperationFailure: user is not allowed to do action [dropDatabase] on [doMeTest_YmFytQPMhe.]
+    # Solution: Give User atlasAdmin Role
+    client.drop_database(dbname)
+
+    for old_dbname in client.list_database_names():
+        if old_dbname.startswith("doMeTest_"):            
+            logging.info(f"Deleting OLDER Test Database: {old_dbname}")
+            client.drop_database(old_dbname)
+
 
 def test_index_page(app_with_temp_board):
     client = app_with_temp_board.test_client()
