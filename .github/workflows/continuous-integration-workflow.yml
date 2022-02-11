@@ -55,6 +55,6 @@ jobs:
       - uses: actions/checkout@v2
       - run: heroku container:login
       - run: docker pull jackiemaw/do-me:latest
-      - run: docker tag jackiemaw/do-me:latest registry.heroku.com/jackiemaw-do-me/we
+      - run: docker tag jackiemaw/do-me:latest registry.heroku.com/jackiemaw-do-me/web
       - run: docker push registry.heroku.com/jackiemaw-do-me/web
       - run: heroku container:release -a jackiemaw-do-me web
