@@ -22,3 +22,39 @@ jobs:
 
     - name: Launch Docker container do-me:test and run e2e tests
       run: docker run -e MONGODB_CONNECTIONSTRING=${{ secrets.MONGODB_CONNECTIONSTRING }} -e MONGODB_DATABASE=doMeDatabase -i do-me:test todo_app/tests_e2e
+    
+  deploy:
+    name: Deploy to Docker Hub
+    if: ${{ github.ref == 'refs/heads/exercise-8' && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:   
+    - 
+        uses: actions/checkout@v2     
+    -
+        name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - 
+        name: Build Docker Image
+        run: docker build --target production --tag jackiemaw/do-me:latest .
+    - 
+        name: Push Docker Image to DockerHub
+        run: docker push jackiemaw/do-me:latest
+
+  deploy_heroku:
+    name: Deploy to Heroku
+    if: ${{ github.ref == 'refs/heads/exercise-8' && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    needs: build
+    env: 
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: heroku container:login
+      - run: docker pull jackiemaw/do-me:latest
+      - run: docker tag jackiemaw/do-me:latest registry.heroku.com/jackiemaw-do-me/web
+      - run: docker push registry.heroku.com/jackiemaw-do-me/web
+      - run: heroku container:release -a jackiemaw-do-me web

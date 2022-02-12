@@ -135,3 +135,21 @@ $ docker run --env-file ./.env -it --publish 5000:5000 --mount type=bind,source=
 $ docker run --env-file ./.env -it --publish 5000:5000 do-me:prod
 ```
  
+## Deployed to Heroku
+
+The application will be automatically deployed to Heroku by GitHub Actions:
+
+https://jackiemaw-do-me.herokuapp.com/
+
+Instructions for manual deploy:
+
+```bash
+$ heroku login
+$ heroku container:login
+$ docker login
+$ docker pull jackiemaw/do-me:latest
+$ docker tag jackiemaw/do-me:latest registry.heroku.com/jackiemaw-do-me/web
+$ docker push registry.heroku.com/jackiemaw-do-me/web
+$ heroku container:release -a jackiemaw-do-me web
+```
+
