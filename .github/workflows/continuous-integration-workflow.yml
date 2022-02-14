@@ -7,6 +7,9 @@ on:
     paths-ignore:
       - 'todo_app/diagrams/**'
 
+env:
+  DOCKER_TAG: 'jackiemaw/do-me:latest'
+
 jobs:
   build:
     name: Build and test
@@ -22,9 +25,6 @@ jobs:
 
     - name: Launch Docker container do-me:test and run e2e tests
       run: docker run -e MONGODB_CONNECTIONSTRING=${{ secrets.MONGODB_CONNECTIONSTRING }} -e MONGODB_DATABASE=doMeDatabase -i do-me:test todo_app/tests_e2e
-  
-env:
-  DOCKER_TAG: 'jackiemaw/do-me:latest'
 
   deploy:
     name: Deploy to Docker Hub
