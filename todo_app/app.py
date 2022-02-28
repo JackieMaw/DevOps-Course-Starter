@@ -6,6 +6,8 @@ from todo_app.viewmodel import ViewModel
 
 import logging
 
+from flask_login import LoginManager, login_required
+
 def init_repository(logger):        
     connectionstring = os.getenv('MONGODB_CONNECTIONSTRING')
     dbname = os.getenv('MONGODB_DATABASE')
@@ -19,6 +21,7 @@ def create_app():
     logging.info('create_app() completed')
 
     @app.route('/')
+    @login_required
     def index():
         try:
             app.logger.info("index()")
@@ -67,5 +70,19 @@ def create_app():
     return app
 
 if __name__ == '__main__':
+
+    login_manager = LoginManager() 
+
+    @login_manager.unauthorized_handler 
+    def unauthenticated(): 
+        app.logger.info(f"unauthenticated... redirecting")
+        return redirect('https://github.com/login/oauth/authorize')
+        pass # Add logic to redirect to the Github OAuth flow when unauthenticated 
+    
+    @login_manager.user_loader 
+    def load_user(user_id): 
+        return None 
+
     app = create_app()
+    login_manager.init_app(app) 
     app.run()
