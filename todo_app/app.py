@@ -14,11 +14,24 @@ def init_repository(logger):
     return mongodb_repository(connectionstring, dbname)
 
 def create_app(): 
+
     app = Flask(__name__)
     logging.basicConfig(filename='todo_app\\app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
     app.config.from_object('todo_app.flask_config.Config')
     repository = init_repository(app.logger)    
-    logging.info('create_app() completed')
+
+    login_manager = LoginManager() 
+    login_manager.init_app(app) 
+
+    @login_manager.unauthorized_handler 
+    def unauthenticated(): 
+        app.logger.info(f"unauthenticated... redirecting")
+        #pass # Add logic to redirect to the Github OAuth flow when unauthenticated 
+        return redirect('https://github.com/login/oauth/authorize')
+    
+    @login_manager.user_loader 
+    def load_user(user_id): 
+        return None         
 
     @app.route('/')
     #@login_required
@@ -67,22 +80,10 @@ def create_app():
             app.logger.error(f"Error : {e}")
             raise e
     
+    logging.info('create_app() completed')
     return app
 
 if __name__ == '__main__':
 
-    login_manager = LoginManager() 
-
-    @login_manager.unauthorized_handler 
-    def unauthenticated(): 
-        app.logger.info(f"unauthenticated... redirecting")
-        pass # Add logic to redirect to the Github OAuth flow when unauthenticated 
-        #return redirect('https://github.com/login/oauth/authorize')
-    
-    @login_manager.user_loader 
-    def load_user(user_id): 
-        return None 
-
     app = create_app()
-    login_manager.init_app(app) 
     app.run()
