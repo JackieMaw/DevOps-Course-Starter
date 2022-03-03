@@ -3,10 +3,9 @@ from todo_app.data.mongodb_repository import mongodb_repository
 import os
 from dotenv import load_dotenv
 from todo_app.viewmodel import ViewModel
-
 import logging
-
 from flask_login import LoginManager, login_required
+from oauthlib.oauth2 import WebApplicationClient
 
 def init_repository(logger):        
     connectionstring = os.getenv('MONGODB_CONNECTIONSTRING')
@@ -26,15 +25,18 @@ def create_app():
     @login_manager.unauthorized_handler 
     def unauthenticated(): 
         app.logger.info(f"unauthenticated... redirecting")
-        #pass # Add logic to redirect to the Github OAuth flow when unauthenticated 
-        return redirect('https://github.com/login/oauth/authorize')
+        #pass # Add logic to redirect to the Github OAuth flow when unauthenticated         
+        client = WebApplicationClient('Iv1.17399bdf0f013e8c')
+        uri = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri='http://localhost:5000/login/callback')
+        app.logger.info(f"unauthenticated... redirecting to: {uri}")
+        return redirect(uri)
     
     @login_manager.user_loader 
     def load_user(user_id): 
         return None         
 
     @app.route('/')
-    #@login_required
+    @login_required
     def index():
         try:
             app.logger.info("index()")
@@ -45,6 +47,21 @@ def create_app():
             return response
         except Exception as e:
             app.logger.error(f"Error : {e}")
+            raise e
+
+    @app.route('/login/callback', methods=['GET'])
+    def login_callback():
+        try:
+            app.logger.info("login_callback()")
+            auth_code = request.args["code"]
+            app.logger.info(f"login_callback() => {auth_code}")
+            client = WebApplicationClient('Iv1.17399bdf0f013e8c')
+            uri = client.prepare_token_request("https://github.com/login/oauth/access_token", )
+            ############################ TODO HERE
+            repository.add_task(task_name, "ToDo")
+            return redirect('/')
+        except Exception as e:
+            app.logger.error("Error: %s", e)
             raise e
 
     @app.route('/tasks', methods=['POST'])
