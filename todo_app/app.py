@@ -21,7 +21,7 @@ def create_app():
     logging.info('create_app() completed')
 
     @app.route('/')
-    @login_required
+    #@login_required
     def index():
         try:
             app.logger.info("index()")
@@ -76,8 +76,8 @@ if __name__ == '__main__':
     @login_manager.unauthorized_handler 
     def unauthenticated(): 
         app.logger.info(f"unauthenticated... redirecting")
-        return redirect('https://github.com/login/oauth/authorize')
         pass # Add logic to redirect to the Github OAuth flow when unauthenticated 
+        #return redirect('https://github.com/login/oauth/authorize')
     
     @login_manager.user_loader 
     def load_user(user_id): 
