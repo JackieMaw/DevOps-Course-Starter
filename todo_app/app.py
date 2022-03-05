@@ -26,9 +26,12 @@ def create_app():
     login_manager = LoginManager() 
     login_manager.init_app(app) 
 
+    client_id = os.getenv('CLIENT_ID')
+    client_secret = os.getenv('CLIENT_SECRET')
+
     @login_manager.unauthorized_handler 
     def unauthenticated():  
-        client = WebApplicationClient('Iv1.17399bdf0f013e8c')
+        client = WebApplicationClient(client_id)
         uri = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri='http://localhost:5000/login/callback')
         app.logger.info(f"unauthenticated... redirecting to: {uri}")
         return redirect(uri)
@@ -60,7 +63,7 @@ def create_app():
             app.logger.info(f"login_callback() => {auth_code}")
 
             # exchange the authorization code for an access token
-            payload = {"client_id": "Iv1.17399bdf0f013e8c", "client_secret":"f8fc05f9b7a476023c4b6552acea00b6139f4c6e", "code": auth_code}
+            payload = {"client_id": "Iv1.17399bdf0f013e8c", "client_secret":client_secret, "code": auth_code}
             headers = {"Accept": "application/json"} #this is not working!
             r = requests.post("https://github.com/login/oauth/access_token", data = payload, headers = headers)
             app.logger.info(f"access_token reponse: {r.text}")    
