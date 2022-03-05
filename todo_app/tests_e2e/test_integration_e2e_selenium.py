@@ -27,11 +27,11 @@ def app_with_temp_board():
     collection = client[dbname]
     tasks = collection.tasks
 
-    tasks.insert_one({"Name" : "1. Setup Database", "Status" : "Done"})
-    tasks.insert_one({"Name" : "2. Test Connectivity", "Status" : "Done"})
-    tasks.insert_one({"Name" : "3. Write Integration Tests", "Status" : "Doing"})
-    tasks.insert_one({"Name" : "4. Write Unit Tests with Mocking", "Status" : "ToDo"})
-    tasks.insert_one({"Name" : "5. Switch Over", "Status" : "ToDo"})
+    # tasks.insert_one({"Name" : "1. Setup Database", "Status" : "Done"})
+    # tasks.insert_one({"Name" : "2. Test Connectivity", "Status" : "Done"})
+    # tasks.insert_one({"Name" : "3. Write Integration Tests", "Status" : "Doing"})
+    # tasks.insert_one({"Name" : "4. Write Unit Tests with Mocking", "Status" : "ToDo"})
+    # tasks.insert_one({"Name" : "5. Switch Over", "Status" : "ToDo"})
    
     logging.info(f"Performing Tests On Test Database: {dbname}")
     
@@ -68,9 +68,16 @@ def driver():
         yield driver
 
 def test_task_journey(driver : webdriver.Firefox, app_with_temp_board):
+
+    #load the index
     driver.get('http://localhost:5000/')
     assert driver.title == 'Do Me'
 
+    #check that there are no tasks
+    tasks = driver.find_elements_by_class_name("card-title")
+    assert len(tasks) == 0
+
+    #add a new task
     elem = driver.find_element_by_name("task_name")
     elem.clear()
     elem.send_keys("AddedByIntegrationTest_Selenium")
@@ -79,13 +86,13 @@ def test_task_journey(driver : webdriver.Firefox, app_with_temp_board):
     #check that the task has been added
     element = WebDriverWait(driver, 5).until(lambda d: d.find_element_by_xpath("//h5[@class='card-title' and contains(text(), 'AddedByIntegrationTest_Selenium')]"))
 
+    #delete the task
     elem = driver.find_element_by_class_name("btn-danger")
     elem.click()
 
-    time.sleep(2)
-
     #check that there are no tasks
-    elemements = driver.find_elements_by_class_name("card-title")
-    assert len(elemements) == 0
+    time.sleep(2)
+    tasks = driver.find_elements_by_class_name("card-title")
+    assert len(tasks) == 0
 
     driver.close()
