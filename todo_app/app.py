@@ -67,7 +67,7 @@ def create_app():
             # # get the user information
             # headers = {"Authorization": f"Bearer {access_token}"}
             # r = requests.get("https://api.github.com/user", headers)
-            # app.logger.info(f"user info reponse: {r.raw}")
+            # app.logger.info(f"user info reponse: {r.text}")
             # user_id = r.json()["login"]
             
             user_id = "JackieMaw"
@@ -84,6 +84,7 @@ def create_app():
             raise e
 
     @app.route('/tasks', methods=['POST'])
+    @login_required
     def add_new_task():
         try:
             app.logger.info("add_new_task()")
@@ -96,6 +97,7 @@ def create_app():
             raise e
 
     @app.route('/change_status/<id>', methods=['POST']) 
+    @login_required
     def change_status(id): 
         try:
             status = request.args["status"]
@@ -107,6 +109,7 @@ def create_app():
             raise e
 
     @app.route('/delete/<id>', methods=['POST']) 
+    @login_required
     def delete(id): 
         try:
             app.logger.info(f"delete: id = {id}")
