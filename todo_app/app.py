@@ -20,6 +20,7 @@ def create_app():
     app = Flask(__name__)
     logging.basicConfig(filename='todo_app\\app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
     app.config.from_object('todo_app.flask_config.Config')
+    app.config['LOGIN_DISABLED'] = os.getenv('LOGIN_DISABLED') == 'True'
     repository = init_repository(app.logger)    
 
     login_manager = LoginManager() 
