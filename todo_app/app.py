@@ -4,8 +4,11 @@ import os
 from dotenv import load_dotenv
 from todo_app.viewmodel import ViewModel
 import logging
-from flask_login import LoginManager, login_required
+from flask_login import LoginManager, login_required, login_user
 from oauthlib.oauth2 import WebApplicationClient
+import requests
+import json
+from todo_app.data.user import User
 
 def init_repository(logger):        
     connectionstring = os.getenv('MONGODB_CONNECTIONSTRING')
@@ -23,9 +26,7 @@ def create_app():
     login_manager.init_app(app) 
 
     @login_manager.unauthorized_handler 
-    def unauthenticated(): 
-        app.logger.info(f"unauthenticated... redirecting")
-        #pass # Add logic to redirect to the Github OAuth flow when unauthenticated         
+    def unauthenticated():  
         client = WebApplicationClient('Iv1.17399bdf0f013e8c')
         uri = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri='http://localhost:5000/login/callback')
         app.logger.info(f"unauthenticated... redirecting to: {uri}")
@@ -55,11 +56,24 @@ def create_app():
             app.logger.info("login_callback()")
             auth_code = request.args["code"]
             app.logger.info(f"login_callback() => {auth_code}")
-            client = WebApplicationClient('Iv1.17399bdf0f013e8c')
-            uri = client.prepare_token_request("https://github.com/login/oauth/access_token", )
-            ############################ TODO HERE
-            repository.add_task(task_name, "ToDo")
+
+            user = User("DummyId")
+            login_user(user)            
             return redirect('/')
+
+            # payload = {"client_id": "Iv1.17399bdf0f013e8c", "client_secret":"f8fc05f9b7a476023c4b6552acea00b6139f4c6e", "code": auth_code}
+            # headers = {"Accept": "application/json"}
+            # r = requests.post("https://github.com/login/oauth/access_token", payload, headers)
+            # app.logger.info(f"access_token reponse: {r.json()}")    
+
+
+            #client = WebApplicationClient('Iv1.17399bdf0f013e8c')
+            #token_url, headers, body = client.prepare_token_request("https://github.com/login/oauth/access_token", code=auth_code, client_secret="f8fc05f9b7a476023c4b6552acea00b6139f4c6e", headers="Accept: application/json")
+            #app.logger.info(f"requestion access token from: {token_url}")
+            #token_response = requests.post(token_url, headers=headers, data=body)
+            #app.logger.info(f"token_response: {json.dumps(token_response.json())}")    
+            #client.parse_request_body_response(json.dumps(token_response.json()))
+
         except Exception as e:
             app.logger.error("Error: %s", e)
             raise e
