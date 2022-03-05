@@ -34,7 +34,7 @@ def create_app():
     
     @login_manager.user_loader 
     def load_user(user_id): 
-        return None         
+        return User(user_id)         
 
     @app.route('/')
     @login_required
@@ -57,22 +57,27 @@ def create_app():
             auth_code = request.args["code"]
             app.logger.info(f"login_callback() => {auth_code}")
 
-            user = User("DummyId")
-            login_user(user)            
-            return redirect('/')
-
+            # # exchange the authorization code for an access token
             # payload = {"client_id": "Iv1.17399bdf0f013e8c", "client_secret":"f8fc05f9b7a476023c4b6552acea00b6139f4c6e", "code": auth_code}
-            # headers = {"Accept": "application/json"}
+            # headers = {"Accept": "application/json"} #this is not working!
             # r = requests.post("https://github.com/login/oauth/access_token", payload, headers)
-            # app.logger.info(f"access_token reponse: {r.json()}")    
+            # app.logger.info(f"access_token reponse: {r.text}")    
+            # access_token = r.json()["access_token"]
 
+            # # get the user information
+            # headers = {"Authorization": f"Bearer {access_token}"}
+            # r = requests.get("https://api.github.com/user", headers)
+            # app.logger.info(f"user info reponse: {r.raw}")
+            # user_id = r.json()["login"]
+            
+            user_id = "JackieMaw"
+            
+            app.logger.info(f"login_user: {user_id}")
+            user = User(user_id)
+            logged_in = login_user(user)          
+            app.logger.info(f"logged_in: {logged_in}")  
 
-            #client = WebApplicationClient('Iv1.17399bdf0f013e8c')
-            #token_url, headers, body = client.prepare_token_request("https://github.com/login/oauth/access_token", code=auth_code, client_secret="f8fc05f9b7a476023c4b6552acea00b6139f4c6e", headers="Accept: application/json")
-            #app.logger.info(f"requestion access token from: {token_url}")
-            #token_response = requests.post(token_url, headers=headers, data=body)
-            #app.logger.info(f"token_response: {json.dumps(token_response.json())}")    
-            #client.parse_request_body_response(json.dumps(token_response.json()))
+            return redirect('/')
 
         except Exception as e:
             app.logger.error("Error: %s", e)
