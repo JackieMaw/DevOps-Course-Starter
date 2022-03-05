@@ -3,8 +3,9 @@ from todo_app.data.task import TaskStatus
 
 class ViewModel:
 
-    def __init__(self, tasks):
+    def __init__(self, tasks, username):
         self._tasks = tasks
+        self._username = username
  
     @property
     def tasks(self):
@@ -13,6 +14,10 @@ class ViewModel:
     @property
     def task_count(self):
         return len(self._tasks) 
+
+    @property
+    def username(self):
+        return self._username
 
     @property
     def ToDo(self):

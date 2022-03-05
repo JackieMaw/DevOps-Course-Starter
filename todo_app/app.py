@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from todo_app.viewmodel import ViewModel
 import logging
-from flask_login import LoginManager, login_required, login_user
+from flask_login import LoginManager, current_user, login_required, login_user
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 import json
@@ -40,10 +40,11 @@ def create_app():
     @login_required
     def index():
         try:
-            app.logger.info("index()")
+            username = current_user.get_id()
+            app.logger.info(f"[{username}] index() => loading tasks from repository")
             tasks = repository.get_tasks()
-            app.logger.info(f"index() => {len(tasks)} tasks retrieved from repository")
-            view_model = ViewModel(tasks)
+            app.logger.info(f"[{username}] index() => {len(tasks)} tasks retrieved from repository")
+            view_model = ViewModel(tasks, username)
             response = render_template('index.html', view_model=view_model) 
             return response
         except Exception as e:
@@ -57,21 +58,19 @@ def create_app():
             auth_code = request.args["code"]
             app.logger.info(f"login_callback() => {auth_code}")
 
-            # # exchange the authorization code for an access token
-            # payload = {"client_id": "Iv1.17399bdf0f013e8c", "client_secret":"f8fc05f9b7a476023c4b6552acea00b6139f4c6e", "code": auth_code}
-            # headers = {"Accept": "application/json"} #this is not working!
-            # r = requests.post("https://github.com/login/oauth/access_token", payload, headers)
-            # app.logger.info(f"access_token reponse: {r.text}")    
-            # access_token = r.json()["access_token"]
+            # exchange the authorization code for an access token
+            payload = {"client_id": "Iv1.17399bdf0f013e8c", "client_secret":"f8fc05f9b7a476023c4b6552acea00b6139f4c6e", "code": auth_code}
+            headers = {"Accept": "application/json"} #this is not working!
+            r = requests.post("https://github.com/login/oauth/access_token", data = payload, headers = headers)
+            app.logger.info(f"access_token reponse: {r.text}")    
+            access_token = r.json()["access_token"]
 
-            # # get the user information
-            # headers = {"Authorization": f"Bearer {access_token}"}
-            # r = requests.get("https://api.github.com/user", headers)
-            # app.logger.info(f"user info reponse: {r.text}")
-            # user_id = r.json()["login"]
-            
-            user_id = "JackieMaw"
-            
+            # get the user information
+            headers = {"Accept": "application/json", "Authorization": f"Bearer {access_token}"}
+            r = requests.get("https://api.github.com/user", headers = headers)
+            app.logger.info(f"user info reponse: {r.text}")
+            user_id = r.json()["login"]
+                        
             app.logger.info(f"login_user: {user_id}")
             user = User(user_id)
             logged_in = login_user(user)          
