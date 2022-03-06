@@ -18,8 +18,8 @@ class User(UserMixin):
 
 class AnonymousUser(UserMixin):
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self):
+        self.id = "Anonymous"
 
     def get_role(self):
         return UserRole.writer
