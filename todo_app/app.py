@@ -20,13 +20,15 @@ def create_app():
     app = Flask(__name__)
     logging.basicConfig(filename='todo_app\\app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
     app.config.from_object('todo_app.flask_config.Config')
-    app.config['LOGIN_DISABLED'] = os.getenv('LOGIN_DISABLED') == 'True'
-    app.logger.info(f"LOGIN_DISABLED: {app.config['LOGIN_DISABLED']}")
+    login_disabled = os.getenv('LOGIN_DISABLED') == 'True'
+    app.config['LOGIN_DISABLED'] = login_disabled
+    app.logger.info(f"LOGIN_DISABLED: { login_disabled }")
     repository = init_repository(app.logger)    
 
     login_manager = LoginManager() 
     login_manager.init_app(app) 
-    login_manager.anonymous_user = AnonymousUser
+    if (login_disabled):
+        login_manager.anonymous_user = AnonymousUser
 
     client_id = os.getenv('CLIENT_ID')
     client_secret = os.getenv('CLIENT_SECRET')
