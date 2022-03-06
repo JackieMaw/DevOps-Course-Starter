@@ -25,4 +25,4 @@ class AnonymousUser(UserMixin):
         self.id = "Anonymous"
 
     def get_role(self):
-        return UserRole.writer
+        return UserRole.reader
