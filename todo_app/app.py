@@ -89,7 +89,7 @@ def create_app():
             app.logger.info(f"Authentication Step 2) Complete. Response: {r.text}")
 
             if "access_token" not in r.json():
-                raise Exception("Authorization Failed at Step 2. See application logs.")
+                raise Exception("Authentication Failed at Step 2. See application logs.")
             access_token = r.json()["access_token"]
 
             # get the user information
@@ -100,7 +100,7 @@ def create_app():
             app.logger.info(f"Authentication Step 3) Complete. Response: {r.text}")
             
             if "login" not in r.json():
-                raise Exception("Authorization Failed at Step3. See application logs.")
+                raise Exception("Authentication Failed at Step3. See application logs.")
             user_id = r.json()["login"]
                         
             app.logger.info(f"Logging in User: {user_id}")
