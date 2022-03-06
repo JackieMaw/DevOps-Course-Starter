@@ -19,6 +19,11 @@ def create_app():
 
     app = Flask(__name__)
     logging.basicConfig(filename='todo_app\\app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+
     app.config.from_object('todo_app.flask_config.Config')
     login_disabled = os.getenv('LOGIN_DISABLED') == 'True'
     app.config['LOGIN_DISABLED'] = login_disabled
