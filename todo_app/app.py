@@ -85,6 +85,7 @@ def create_app():
             app.logger.info(f"Authentication Step 2) Complete. Response: {r.text}")
 
             if "access_token" not in r.json():
+                # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
                 raise Exception("Authentication Failed at Step 2. See application logs.")
             access_token = r.json()["access_token"]
 
@@ -96,6 +97,7 @@ def create_app():
             app.logger.info(f"Authentication Step 3) Complete. Response: {r.text}")
             
             if "login" not in r.json():
+                # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
                 raise Exception("Authentication Failed at Step3. See application logs.")
             user_id = r.json()["login"]
                         
@@ -106,6 +108,7 @@ def create_app():
             return redirect('/')
 
         except Exception as e:
+            # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
             app.logger.error("Error: %s", e)
             raise e
 
