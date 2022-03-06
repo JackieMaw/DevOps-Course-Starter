@@ -25,14 +25,15 @@ def create_app():
     app.logger.setLevel(gunicorn_logger.level)
 
     app.config.from_object('todo_app.flask_config.Config')
+    repository = init_repository(app.logger)    
+
     login_disabled = os.getenv('LOGIN_DISABLED') == 'True'
     app.config['LOGIN_DISABLED'] = login_disabled
-    app.logger.info(f"LOGIN_DISABLED: { login_disabled }")
-    repository = init_repository(app.logger)    
 
     login_manager = LoginManager() 
     login_manager.init_app(app) 
-    if (login_disabled):
+    if login_disabled:
+        app.logger.info(f"LOGIN DISABLED: Setting Anonymous User")
         login_manager.anonymous_user = AnonymousUser
 
     client_id = os.getenv('CLIENT_ID')
