@@ -5,7 +5,7 @@ class UserRole(Enum):
     reader = "reader"
     writer = "writer"
 
-role_lookup = { "JackieMaw" : UserRole.reader }
+role_lookup = { "JackieMaw" : UserRole.writer }
 
 from flask_login import UserMixin
 class User(UserMixin):

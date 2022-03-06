@@ -12,7 +12,7 @@ def tasks():
 def test_viewmodel_returns_ToDo(tasks):
 
     # Arrange    
-    view_model = ViewModel(tasks, "username")
+    view_model = ViewModel(tasks, "username", "UserRole.writer")
 
     # Act
     todo_list = view_model.ToDo
@@ -24,7 +24,7 @@ def test_viewmodel_returns_ToDo(tasks):
 def test_viewmodel_returns_Doing(tasks):
 
     # Arrange    
-    view_model = ViewModel(tasks, "username")
+    view_model = ViewModel(tasks, "username", "UserRole.writer")
 
     # Act
     todo_list = view_model.Doing
@@ -36,7 +36,7 @@ def test_viewmodel_returns_Doing(tasks):
 def test_viewmodel_returns_Done(tasks):
 
     # Arrange    
-    view_model = ViewModel(tasks, "username")
+    view_model = ViewModel(tasks, "username", "UserRole.writer")
 
     # Act
     todo_list = view_model.Done

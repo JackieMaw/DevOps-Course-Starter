@@ -47,11 +47,11 @@ def create_app():
     @login_required
     def index():
         try:
-            username = current_user.get_id() + " => " + str(current_user.get_role())
+            username = current_user.get_id()
             app.logger.info(f"[{username}] index() => loading tasks from repository")
             tasks = repository.get_tasks()
             app.logger.info(f"[{username}] index() => {len(tasks)} tasks retrieved from repository")
-            view_model = ViewModel(tasks, username)
+            view_model = ViewModel(tasks, username, current_user.get_role())
             response = render_template('index.html', view_model=view_model) 
             return response
         except Exception as e:
