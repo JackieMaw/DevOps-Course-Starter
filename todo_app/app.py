@@ -20,6 +20,10 @@ def create_app():
     app = Flask(__name__)
     logging.basicConfig(filename='todo_app\\app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
+    flask_logger = logging.getLogger('flask.error')
+    app.logger.handlers = flask_logger.handlers
+    app.logger.setLevel(flask_logger.level)
+
     gunicorn_logger = logging.getLogger('gunicorn.error')
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)
@@ -40,11 +44,13 @@ def create_app():
 
     @login_manager.unauthorized_handler 
     def unauthenticated():  
+        app.logger.info(f"Session is Unauthenticated!")
         client = WebApplicationClient(client_id)
         redirect_uri=f'{request.url}login/callback'
-        app.logger.info(f"redirect_uri: {redirect_uri}")
         uri = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri=redirect_uri)
-        app.logger.info(f"unauthenticated... redirecting to: {uri}")
+        app.logger.info(f"Authentication Step 1) Ask GitHub for Authorization Code")
+        app.logger.info(f"Ask GitHub to Redirect to: {redirect_uri}")
+        app.logger.info(f"Redirecting to: {uri}")
         return redirect(uri)
     
     @login_manager.user_loader 
@@ -68,28 +74,38 @@ def create_app():
 
     @app.route('/login/callback', methods=['GET'])
     def login_callback():
-        try:
-            app.logger.info("login_callback()")
-            auth_code = request.args["code"]
-            app.logger.info(f"login_callback() => {auth_code}")
+        try:            
+            app.logger.info(f"Authentication Step 1) Completed.")
+            auth_code = request.args["code"]            
+            app.logger.info(f"GitHub Authorization Code: {auth_code}")
 
             # exchange the authorization code for an access token
             payload = {"client_id": "Iv1.17399bdf0f013e8c", "client_secret":client_secret, "code": auth_code}
-            headers = {"Accept": "application/json"} #this is not working!
+            headers = {"Accept": "application/json"}
+            app.logger.info(f"Authentication Step 2) Exchange GitHub Authorization Code for Access Token")
+            app.logger.info(f"POST: https://github.com/login/oauth/access_token")
+            app.logger.info(f"Payload: {payload}")
             r = requests.post("https://github.com/login/oauth/access_token", data = payload, headers = headers)
-            app.logger.info(f"access_token reponse: {r.text}")    
+            app.logger.info(f"Authentication Step 2) Complete. Response: {r.text}")
+
+            if "access_token" not in r.json():
+                raise Exception("Authorization Failed at Step 2. See application logs.")
             access_token = r.json()["access_token"]
 
             # get the user information
+            app.logger.info(f"Authentication Step 3) Use GitHub Access Token to retrieve User Details.")
+            app.logger.info(f"GET: https://api.github.com/user")
             headers = {"Accept": "application/json", "Authorization": f"Bearer {access_token}"}
             r = requests.get("https://api.github.com/user", headers = headers)
-            app.logger.info(f"user info reponse: {r.text}")
+            app.logger.info(f"Authentication Step 3) Complete. Response: {r.text}")
+            
+            if "login" not in r.json():
+                raise Exception("Authorization Failed at Step3. See application logs.")
             user_id = r.json()["login"]
                         
-            app.logger.info(f"login_user: {user_id}")
+            app.logger.info(f"Logging in User: {user_id}")
             user = User(user_id)
             logged_in = login_user(user)          
-            app.logger.info(f"logged_in: {logged_in}")  
 
             return redirect('/')
 
