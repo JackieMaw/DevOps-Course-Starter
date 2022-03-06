@@ -32,7 +32,9 @@ def create_app():
     @login_manager.unauthorized_handler 
     def unauthenticated():  
         client = WebApplicationClient(client_id)
-        uri = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri='http://localhost:5000/login/callback')
+        redirect_uri=f'{request.url}login/callback'
+        app.logger.info(f"redirect_uri: {redirect_uri}")
+        uri = client.prepare_request_uri('https://github.com/login/oauth/authorize', redirect_uri=redirect_uri)
         app.logger.info(f"unauthenticated... redirecting to: {uri}")
         return redirect(uri)
     
