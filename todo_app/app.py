@@ -20,10 +20,6 @@ def create_app():
     app = Flask(__name__)
     logging.basicConfig(filename='todo_app\\app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
-    flask_logger = logging.getLogger('flask.error')
-    app.logger.handlers = flask_logger.handlers
-    app.logger.setLevel(flask_logger.level)
-
     gunicorn_logger = logging.getLogger('gunicorn.error')
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)
@@ -80,7 +76,7 @@ def create_app():
             app.logger.info(f"GitHub Authorization Code: {auth_code}")
 
             # exchange the authorization code for an access token
-            payload = {"client_id": "Iv1.17399bdf0f013e8c", "client_secret":client_secret, "code": auth_code}
+            payload = {"client_id": client_id, "client_secret": client_secret, "code": auth_code}
             headers = {"Accept": "application/json"}
             app.logger.info(f"Authentication Step 2) Exchange GitHub Authorization Code for Access Token")
             app.logger.info(f"POST: https://github.com/login/oauth/access_token")
