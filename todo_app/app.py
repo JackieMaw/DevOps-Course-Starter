@@ -8,7 +8,7 @@ from flask_login import LoginManager, current_user, login_required, login_user
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 import json
-from todo_app.data.user import User
+from todo_app.data.user import AnonymousUser, User, UserRole
 
 def init_repository(logger):        
     connectionstring = os.getenv('MONGODB_CONNECTIONSTRING')
@@ -25,6 +25,7 @@ def create_app():
 
     login_manager = LoginManager() 
     login_manager.init_app(app) 
+    login_manager.anonymous_user = AnonymousUser
 
     client_id = os.getenv('CLIENT_ID')
     client_secret = os.getenv('CLIENT_SECRET')
@@ -46,7 +47,7 @@ def create_app():
     @login_required
     def index():
         try:
-            username = current_user.get_id()
+            username = current_user.get_id() + " => " + str(current_user.get_role())
             app.logger.info(f"[{username}] index() => loading tasks from repository")
             tasks = repository.get_tasks()
             app.logger.info(f"[{username}] index() => {len(tasks)} tasks retrieved from repository")
@@ -91,38 +92,50 @@ def create_app():
     @app.route('/tasks', methods=['POST'])
     @login_required
     def add_new_task():
-        try:
-            app.logger.info("add_new_task()")
-            task_name = request.form["task_name"]
-            app.logger.info(f"add_new_task() => {task_name}")
-            repository.add_task(task_name, "ToDo")
-            return redirect('/')
-        except Exception as e:
-            app.logger.error("Error: %s", e)
-            raise e
+        if (current_user.get_role() == UserRole.writer):
+            try:
+                app.logger.info("add_new_task()")
+                task_name = request.form["task_name"]
+                app.logger.info(f"add_new_task() => {task_name}")
+                repository.add_task(task_name, "ToDo")
+                return redirect('/')
+            except Exception as e:
+                app.logger.error("Error: %s", e)
+                raise e
+        else:
+            # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
+            raise Exception("Unauthorized. To Add a New Task, the User must have the 'writer' role.")
 
     @app.route('/change_status/<id>', methods=['POST']) 
     @login_required
     def change_status(id): 
-        try:
-            status = request.args["status"]
-            app.logger.info(f"mark_as_done: id = {id}, status = {status}")
-            repository.update_task_status(id, status)
-            return redirect('/')
-        except Exception as e:
-            app.logger.error(f"Error : {e}")
-            raise e
+        if (current_user.get_role() == UserRole.writer):
+            try:
+                status = request.args["status"]
+                app.logger.info(f"mark_as_done: id = {id}, status = {status}")
+                repository.update_task_status(id, status)
+                return redirect('/')
+            except Exception as e:
+                app.logger.error(f"Error : {e}")
+                raise e
+        else:
+            # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
+            raise Exception("Unauthorized. To Change a Task Status, the User must have the 'writer' role.")
 
     @app.route('/delete/<id>', methods=['POST']) 
     @login_required
-    def delete(id): 
-        try:
-            app.logger.info(f"delete: id = {id}")
-            repository.delete_task(id)  
-            return redirect('/')
-        except Exception as e:
-            app.logger.error(f"Error : {e}")
-            raise e
+    def delete(id):         
+        if (current_user.get_role() == UserRole.writer):
+            try:
+                app.logger.info(f"delete: id = {id}")
+                repository.delete_task(id)  
+                return redirect('/')
+            except Exception as e:
+                app.logger.error(f"Error : {e}")
+                raise e
+        else:
+            # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
+            raise Exception("Unauthorized. To Delete a Task, the User must have the 'writer' role.")
     
     logging.info('create_app() completed')
     return app
