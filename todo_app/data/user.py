@@ -14,7 +14,10 @@ class User(UserMixin):
         self.id = id
 
     def get_role(self):
-        return role_lookup[self.id]
+        if self.id in role_lookup:
+            return role_lookup[self.id]
+        else:
+            return UserRole.reader
 
 class AnonymousUser(UserMixin):
 
