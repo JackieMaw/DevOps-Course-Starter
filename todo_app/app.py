@@ -86,6 +86,7 @@ def create_app():
 
             if "access_token" not in r.json():
                 return "Authentication Failed at Step 2. See application logs.", 401
+
             access_token = r.json()["access_token"]
 
             # get the user information
@@ -96,8 +97,7 @@ def create_app():
             app.logger.info(f"Authentication Step 3) Complete. Response: {r.text}")
             
             if "login" not in r.json():
-                # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
-                raise Exception("Authentication Failed at Step3. See application logs.")
+                return "Authentication Failed at Step 3. See application logs.", 401
             user_id = r.json()["login"]
                         
             app.logger.info(f"Logging in User: {user_id}")
@@ -107,9 +107,8 @@ def create_app():
             return redirect('/')
 
         except Exception as e:
-            # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
             app.logger.error("Error: %s", e)
-            raise e
+            return f"Authentication Failed with Exception {e}", 401
 
     @app.route('/tasks', methods=['POST'])
     @login_required
@@ -125,8 +124,7 @@ def create_app():
                 app.logger.error("Error: %s", e)
                 raise e
         else:
-            # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
-            raise Exception("Unauthorized. To Add a New Task, the User must have the 'writer' role.")
+            return f"Unauthorized. To Add a New Task, the User must have the 'writer' role.", 401
 
     @app.route('/change_status/<id>', methods=['POST']) 
     @login_required
@@ -141,8 +139,7 @@ def create_app():
                 app.logger.error(f"Error : {e}")
                 raise e
         else:
-            # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
-            raise Exception("Unauthorized. To Change a Task Status, the User must have the 'writer' role.")
+            return f"Unauthorized. To Change a Task Status, the User must have the 'writer' role.", 401
 
     @app.route('/delete/<id>', methods=['POST']) 
     @login_required
@@ -156,8 +153,7 @@ def create_app():
                 app.logger.error(f"Error : {e}")
                 raise e
         else:
-            # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
-            raise Exception("Unauthorized. To Delete a Task, the User must have the 'writer' role.")
+            return f"Unauthorized. To Delete a Task, the User must have the 'writer' role.", 401
     
     logging.info('create_app() completed')
     return app
