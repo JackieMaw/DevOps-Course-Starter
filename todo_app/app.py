@@ -86,8 +86,7 @@ def create_app():
             app.logger.info(f"Authentication Step 2) Complete. Response: {r.text}")
 
             if "access_token" not in r.json():
-                # HELP - is there a better way to handle this? how to return 401 - Unauthorized?
-                raise Exception("Authentication Failed at Step 2. See application logs.")
+                return "Authentication Failed at Step 2. See application logs.", 401
             access_token = r.json()["access_token"]
 
             # get the user information
