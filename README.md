@@ -172,7 +172,12 @@ https://github.com/settings/apps/domejackie
         http://localhost:5000/
         http://localhost:5000/login/callback
 
-PRODUCTION
+PRODUCTION HEROKU
 https://github.com/settings/applications/1847131
         https://jackiemaw-do-me.herokuapp.com/
         https://jackiemaw-do-me.herokuapp.com/login/callback
+
+PRODUCTION AZURE
+https://github.com/settings/applications/1857732
+        http://jackieu-todoapp.azurewebsites.net/
+        http://jackieu-todoapp.azurewebsites.net/login/callback
