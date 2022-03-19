@@ -81,7 +81,6 @@ def create_app():
             headers = {"Accept": "application/json"}
             app.logger.info(f"Authentication Step 2) Exchange GitHub Authorization Code for Access Token")
             app.logger.info(f"POST: https://github.com/login/oauth/access_token")
-            app.logger.info(f"Payload: {payload}")
             r = requests.post("https://github.com/login/oauth/access_token", data = payload, headers = headers)
             app.logger.info(f"Authentication Step 2) Complete. Response: {r.text}")
 
