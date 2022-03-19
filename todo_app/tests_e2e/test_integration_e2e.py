@@ -11,6 +11,8 @@ import pymongo
 @pytest.fixture(scope='module')
 def app_with_temp_board():
    
+    os.environ['LOGIN_DISABLED'] = 'True'
+
     dbname = 'doMeTest_' + ''.join(random.choice(string.ascii_letters) for i in range(10))
     logging.info(f"Creating Test Database: {dbname}")
 

@@ -153,3 +153,26 @@ $ docker push registry.heroku.com/jackiemaw-do-me/web
 $ heroku container:release -a jackiemaw-do-me web
 ```
 
+All secrets must be setup on Heroku as "Config Vars":
+https://dashboard.heroku.com/apps/jackiemaw-do-me/settings
+
+
+## OAuth with GitHub
+
+When you first access the application, it will request User Authentication from GitHub. 
+By default, all users will have UserRole "reader" which means they will not be able to create, edit or delete Tasks.
+To get access to UserRole "writer" you'll have to edit the code because only JackieMaw has "writer" access :-)
+
+Any deployed application must be registered with GitHub as an OAuth App: https://github.com/settings/developers
+
+The following applications are already registered with GitHub:
+
+LOCAL DEVELOPMENT
+https://github.com/settings/apps/domejackie
+        http://localhost:5000/
+        http://localhost:5000/login/callback
+
+PRODUCTION
+https://github.com/settings/applications/1847131
+        https://jackiemaw-do-me.herokuapp.com/
+        https://jackiemaw-do-me.herokuapp.com/login/callback
