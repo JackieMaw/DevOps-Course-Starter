@@ -67,4 +67,4 @@ jobs:
     needs: deploy
     steps:
       - uses: actions/checkout@v2
-      - run: curl -dH -X POST "https://\$jackiemaw-do-me:bG90x4DQHyvJqZma0jYFlcq7duLrhRLndvmTdYRxMoDba6ATS3r4ufMRjSPq@jackiemaw-do-me.scm.azurewebsites.net/docker/hook"
+      - run: curl -dH -X POST ${{ secrets.AZURE_WEBHOOK }}

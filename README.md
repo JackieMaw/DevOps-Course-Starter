@@ -179,7 +179,13 @@ az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExer
 Instructions for manual deploy to Azure from DockerHub registry:
 
 ```bash
-curl -dH -X POST "https://\$jackiemaw-do-me:bG90x4DQHyvJqZma0jYFlcq7duLrhRLndvmTdYRxMoDba6ATS3r4ufMRjSPq@jackiemaw-do-me.scm.azurewebsites.net/docker/hook"
+curl -dH -X POST <webhook>
+```
+
+To get the webhook:
+
+```powershell
+az webapp deployment container config -n jackiemaw-do-me -g CreditSuisse21_JacquelineUngerer_ProjectExercise -e true
 ```
 
 ## OAuth with GitHub
