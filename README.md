@@ -156,6 +156,31 @@ $ heroku container:release -a jackiemaw-do-me web
 All secrets must be setup on Heroku as "Config Vars":
 https://dashboard.heroku.com/apps/jackiemaw-do-me/settings
 
+## Deployed to Azure
+
+The application will be automatically deployed to Azure by GitHub Actions:
+        http://jackiemaw-do-me.azurewebsites.net/
+
+Instructions for setting up the Azure WebApp (one-time):
+
+```powershell
+az appservice plan create --resource-group CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemawappserviceplan --sku B1 --is-linux
+
+az webapp create --resource-group CreditSuisse21_JacquelineUngerer_ProjectExercise --plan jackiemawappserviceplan --name jackiemaw-do-me --deployment-container-image-name jackiemaw/do-me:latest
+
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings FLASK_APP=todo_app/app. 
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings SECRET_KEY=??? 
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings MONGODB_CONNECTIONSTRING=???
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings MONGODB_DATABASE=doMeDatabase 
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings CLIENT_ID=???
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings CLIENT_SECRET=???
+```
+
+Instructions for manual deploy to Azure from DockerHub registry:
+
+```bash
+curl -dH -X POST "https://\$jackiemaw-do-me:bG90x4DQHyvJqZma0jYFlcq7duLrhRLndvmTdYRxMoDba6ATS3r4ufMRjSPq@jackiemaw-do-me.scm.azurewebsites.net/docker/hook"
+```
 
 ## OAuth with GitHub
 
