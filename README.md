@@ -47,6 +47,22 @@ Set the following values in the .env file:
         MONGODB_CONNECTIONSTRING=<connectionstring>
         MONGODB_DATABASE=doMeDatabase
 
+## Storing Data on CosmoDb (using MongoDB API)
+
+The application stores the tasks on CosmoDb:
+
+Connection String:
+        mongodb://jackieucosmosdbaccount:<password>@jackieucosmosdbaccount.mongo.cosmos.azure.com:10255/?ssl=true
+
+Set the following values in the .env file:
+        MONGODB_CONNECTIONSTRING=<connectionstring>
+        MONGODB_DATABASE=doMeDatabase
+
+### Trouble-shooting:
+
+pymongo.errors.OperationFailure: Retryable writes are not supported. Please disable retryable writes by specifying "retrywrites=false" in the connection string or an equivalent driver specific config., full error: {'ok': 0.0, 'errmsg': 'Retryable writes are not supported. Please disable retryable writes by specifying "retrywrites=false" in the connection string or an equivalent driver specific config.', 'code': 2, 'codeName': 'BadValue'}
+
+
 ## Running the App with Flask
 
 Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
@@ -187,6 +203,11 @@ To get the webhook:
 ```powershell
 az webapp deployment container config -n jackiemaw-do-me -g CreditSuisse21_JacquelineUngerer_ProjectExercise -e true
 ```
+
+# Trouble-shooting
+
+View application logs here:
+        https://jackiemaw-do-me.scm.azurewebsites.net/api/logstream
 
 ## OAuth with GitHub
 
