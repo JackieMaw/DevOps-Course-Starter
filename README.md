@@ -47,6 +47,22 @@ Set the following values in the .env file:
         MONGODB_CONNECTIONSTRING=<connectionstring>
         MONGODB_DATABASE=doMeDatabase
 
+## Storing Data on CosmoDb (using MongoDB API)
+
+The application stores the tasks on CosmoDb:
+
+Connection String:
+        mongodb://jackieucosmosdbaccount:<password>@jackieucosmosdbaccount.mongo.cosmos.azure.com:10255/?ssl=true
+
+Set the following values in the .env file:
+        MONGODB_CONNECTIONSTRING=<connectionstring>
+        MONGODB_DATABASE=doMeDatabase
+
+### Trouble-shooting:
+
+pymongo.errors.OperationFailure: Retryable writes are not supported. Please disable retryable writes by specifying "retrywrites=false" in the connection string or an equivalent driver specific config., full error: {'ok': 0.0, 'errmsg': 'Retryable writes are not supported. Please disable retryable writes by specifying "retrywrites=false" in the connection string or an equivalent driver specific config.', 'code': 2, 'codeName': 'BadValue'}
+
+
 ## Running the App with Flask
 
 Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
@@ -156,6 +172,42 @@ $ heroku container:release -a jackiemaw-do-me web
 All secrets must be setup on Heroku as "Config Vars":
 https://dashboard.heroku.com/apps/jackiemaw-do-me/settings
 
+## Deployed to Azure
+
+The application will be automatically deployed to Azure by GitHub Actions:
+        http://jackiemaw-do-me.azurewebsites.net/
+
+Instructions for setting up the Azure WebApp (one-time):
+
+```powershell
+az appservice plan create --resource-group CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemawappserviceplan --sku B1 --is-linux
+
+az webapp create --resource-group CreditSuisse21_JacquelineUngerer_ProjectExercise --plan jackiemawappserviceplan --name jackiemaw-do-me --deployment-container-image-name jackiemaw/do-me:latest
+
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings FLASK_APP=todo_app/app. 
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings SECRET_KEY=??? 
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings MONGODB_CONNECTIONSTRING=???
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings MONGODB_DATABASE=doMeDatabase 
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings CLIENT_ID=???
+az webapp config appsettings set -g CreditSuisse21_JacquelineUngerer_ProjectExercise -n jackiemaw-do-me --settings CLIENT_SECRET=???
+```
+
+Instructions for manual deploy to Azure from DockerHub registry:
+
+```bash
+curl -dH -X POST <webhook>
+```
+
+To get the webhook:
+
+```powershell
+az webapp deployment container config -n jackiemaw-do-me -g CreditSuisse21_JacquelineUngerer_ProjectExercise -e true
+```
+
+# Trouble-shooting
+
+View application logs here:
+        https://jackiemaw-do-me.scm.azurewebsites.net/api/logstream
 
 ## OAuth with GitHub
 
@@ -172,7 +224,12 @@ https://github.com/settings/apps/domejackie
         http://localhost:5000/
         http://localhost:5000/login/callback
 
-PRODUCTION
+PRODUCTION HEROKU
 https://github.com/settings/applications/1847131
         https://jackiemaw-do-me.herokuapp.com/
         https://jackiemaw-do-me.herokuapp.com/login/callback
+
+PRODUCTION AZURE
+https://github.com/settings/applications/1857732
+        http://jackieu-todoapp.azurewebsites.net/
+        http://jackieu-todoapp.azurewebsites.net/login/callback
