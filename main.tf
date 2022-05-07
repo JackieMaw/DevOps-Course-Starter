@@ -21,7 +21,7 @@ resource "random_integer" "ri" {
 }
 
 resource "azurerm_cosmosdb_account" "main" {
-  name                = "jackiemaw-cosmos-db-${random_integer.ri.result}"
+  name                = "${var.prefix}jackiemaw-cosmos-db-${random_integer.ri.result}"
   location            = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
   offer_type          = "Standard"
@@ -70,7 +70,7 @@ resource "azurerm_cosmosdb_mongo_database" "main" {
 }
 
 resource "azurerm_app_service_plan" "main" {
-  name                = "terraformed-asp"
+  name                = "${var.prefix}terraformed-asp"
   location            = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
   kind                = "Linux"
@@ -82,7 +82,7 @@ resource "azurerm_app_service_plan" "main" {
 }
 
 resource "azurerm_app_service" "main" {
-  name                = "jackiemaw-do-me-now"
+  name                = "${var.prefix}jackiemaw-do-me-now"
   location            = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
   app_service_plan_id = azurerm_app_service_plan.main.id
@@ -94,9 +94,9 @@ resource "azurerm_app_service" "main" {
     "DOCKER_REGISTRY_SERVER_URL" = "https://index.docker.io"
     "FLASK_APP"                  = "todo_app/app."
     "SECRET_KEY"                 = "AzureSecretKey"
-    "CLIENT_ID"                  = "2b0847670df12f233229"
-    "CLIENT_SECRET"              = "84d92032ade58c6dd882655e038900abb3ff0163"
-    "MONGODB_CONNECTIONSTRING"  = "mongodb://jackiemaw-cosmos-db-94096:VHVLbnXxPrQpnATtw08tB0F0hv6wQ3YwEhAMIs8mE7msCsZ0ueuAi0VN7uZ0zbFzr6rVnTyNZrWZQoPJSZEnvg==@jackiemaw-cosmos-db-94096.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@jackiemaw-cosmos-db-94096@"
+    "CLIENT_ID"                  = var.CLIENT_ID
+    "CLIENT_SECRET"              = var.CLIENT_SECRET
+    "MONGODB_CONNECTIONSTRING"   = azurerm_cosmosdb_account.main.connection_strings[0]
     "MONGODB_DATABASE"           = "doMeNowDatabase"
   }
 }
