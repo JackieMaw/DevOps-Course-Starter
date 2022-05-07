@@ -5,6 +5,12 @@ terraform {
       version = "~>2.0"
     }
   }
+    backend "azurerm" {
+        resource_group_name  = "CreditSuisse21_JacquelineUngerer_ProjectExercise"
+        storage_account_name = "tfstate434"
+        container_name       = "tfstate"
+        key                  = "terraform.tfstate"
+    }
 }
 
 provider "azurerm" {
@@ -66,7 +72,7 @@ resource "azurerm_cosmosdb_mongo_database" "main" {
   resource_group_name = azurerm_cosmosdb_account.main.resource_group_name
   account_name        = azurerm_cosmosdb_account.main.name
 
-  lifecycle { prevent_destroy = true }
+  lifecycle { prevent_destroy = false }
 }
 
 resource "azurerm_app_service_plan" "main" {
