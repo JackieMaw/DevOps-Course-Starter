@@ -65,6 +65,8 @@ resource "azurerm_cosmosdb_mongo_database" "main" {
   name                = "doMeNowDatabase"
   resource_group_name = azurerm_cosmosdb_account.main.resource_group_name
   account_name        = azurerm_cosmosdb_account.main.name
+
+  lifecycle { prevent_destroy = true }
 }
 
 resource "azurerm_app_service_plan" "main" {
@@ -90,14 +92,14 @@ resource "azurerm_app_service" "main" {
   }
   app_settings = {
     "DOCKER_REGISTRY_SERVER_URL" = "https://index.docker.io"
-	"FLASK_APP"="todo_app/app."
-	"SECRET_KEY" = "AzureSecretKey"
-	"MONGODB_CONNECTION_STRING" = azurerm_cosmosdb_account.main.connection_strings[0]
-	"MONGODB_DATABASE" = "doMeNowDatabase"
-	"CLIENT_ID" = "2b0847670df12f233229"
-	"CLIENT_SECRET" = "84d92032ade58c6dd882655e038900abb3ff0163"
+    "FLASK_APP"                  = "todo_app/app."
+    "SECRET_KEY"                 = "AzureSecretKey"
+    "CLIENT_ID"                  = "2b0847670df12f233229"
+    "CLIENT_SECRET"              = "84d92032ade58c6dd882655e038900abb3ff0163"
+    "MONGODB_CONNECTIONSTRING"  = "mongodb://jackiemaw-cosmos-db-94096:VHVLbnXxPrQpnATtw08tB0F0hv6wQ3YwEhAMIs8mE7msCsZ0ueuAi0VN7uZ0zbFzr6rVnTyNZrWZQoPJSZEnvg==@jackiemaw-cosmos-db-94096.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@jackiemaw-cosmos-db-94096@"
+    "MONGODB_DATABASE"           = "doMeNowDatabase"
   }
 }
 
 
- 
+
