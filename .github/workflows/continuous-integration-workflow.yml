@@ -3,9 +3,6 @@ on:
   push:
     paths-ignore:
       - 'todo_app/diagrams/**'
-  pull_request:
-    paths-ignore:
-      - 'todo_app/diagrams/**'
 
 env:
   DOCKER_TAG: 'jackiemaw/do-me:latest'
