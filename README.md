@@ -233,3 +233,8 @@ PRODUCTION AZURE
 https://github.com/settings/applications/1857732
         http://jackieu-todoapp.azurewebsites.net/
         http://jackieu-todoapp.azurewebsites.net/login/callback
+
+PRODUCTION AZURE - Deployed by Terraform
+https://github.com/settings/applications/1894886	
+	http://jackiemaw-do-me-now.azurewebsites.net/
+	http://jackiemaw-do-me-now.azurewebsites.net/login/callback

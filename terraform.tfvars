@@ -1,0 +1,3 @@
+prefix        = ""
+CLIENT_ID     = "2b0847670df12f233229"
+CLIENT_SECRET = "84d92032ade58c6dd882655e038900abb3ff0163"
