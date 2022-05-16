@@ -71,4 +71,6 @@ jobs:
     needs: deploy
     steps:
       - uses: actions/checkout@v2
-      - run: curl -dH -X POST ${{ secrets.AZURE_WEBHOOK }}
+      - run: terraform init
+      - run: terraform apply -auto-approve -var TF_VAR_CLIENT_ID ${{ secrets.TF_VAR_CLIENT_ID }} -var TF_VAR_CLIENT_SECRET ${{ secrets.TF_VAR_CLIENT_SECRET }}
+      - run: curl -dH -X POST "$(terraform output -raw cd_webhook)"

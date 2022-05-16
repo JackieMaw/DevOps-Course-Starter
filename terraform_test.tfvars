@@ -1,3 +1,0 @@
-prefix        = "test-"
-CLIENT_ID     = "acc71c984b123bf89828"
-CLIENT_SECRET = "0188507d99e74e24a471a37bc25b879e73ee1d78"
