@@ -9,6 +9,8 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests
 import json
 from todo_app.data.user import AnonymousUser, User, UserRole
+from loggly.handlers import HTTPSHandler
+from logging import Formatter
 
 def init_repository(logger):        
     connectionstring = os.getenv('MONGODB_CONNECTIONSTRING')
@@ -25,6 +27,12 @@ def create_app():
     app.logger.setLevel(gunicorn_logger.level)
 
     app.config.from_object('todo_app.flask_config.Config')
+
+    if os.getenv('LOGGLY_TOKEN') is not None:
+        handler = HTTPSHandler(f'https://logs-01.loggly.com/inputs/{os.getenv("LOGGLY_TOKEN")}/tag/todo-app')
+        handler.setFormatter(Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s"))
+        app.logger.addHandler(handler)
+
     repository = init_repository(app.logger)    
 
     login_disabled = os.getenv('LOGIN_DISABLED') == 'True'
