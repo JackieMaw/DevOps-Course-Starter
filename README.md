@@ -204,10 +204,7 @@ To get the webhook:
 az webapp deployment container config -n jackiemaw-do-me -g CreditSuisse21_JacquelineUngerer_ProjectExercise -e true
 ```
 
-# Trouble-shooting
 
-View application logs here:
-        https://jackiemaw-do-me.scm.azurewebsites.net/api/logstream
 
 ## OAuth with GitHub
 
@@ -238,3 +235,36 @@ PRODUCTION AZURE - Deployed by Terraform
 https://github.com/settings/applications/1894886	
 	http://jackiemaw-do-me-now.azurewebsites.net/
 	http://jackiemaw-do-me-now.azurewebsites.net/login/callback
+	
+# Production Deployment on Azure
+
+## Trouble-shooting
+
+View application logs here:
+        https://jackiemaw-do-me-now.scm.azurewebsites.net/api/logstream
+
+## Environment Variables
+
+In order to deploy automatically to Azure via Terraform, you need to add the following Secrets for the GitHub workflow:
+
+  ARM_CLIENT_ID
+  ARM_TENANT_ID
+  ARM_SUBSCRIPTION_ID
+  ARM_CLIENT_SECRET
+  
+These can be obtained when you setup the Security Principal, for example:
+
+az ad sp create-for-rbac --name "DoMeServicePrincipal" --role Contributor --scopes /subscriptions/d33b95c7-af3c-4247-9661-aa96d47fccc0/resourceGroups/CreditSuisse21_JacquelineUngerer_ProjectExercise
+
+The underlying Active Directory Graph API will be replaced by Microsoft Graph API in a future version of Azure CLI. Please carefully review all breaking changes introduced during this migration: https://docs.microsoft.com/cli/azure/microsoft-graph-migration
+
+Creating 'Contributor' role assignment under scope '/subscriptions/d33b95c7-af3c-4247-9661-aa96d47fccc0/resourceGroups/CreditSuisse21_JacquelineUngerer_ProjectExercise'
+The output includes credentials that you must protect. Be sure that you do not include these credentials in your code or check the credentials into your source control. For more information, see https://aka.ms/azadsp-cli
+{
+  "appId": "2b0ca477-e125-40b9-b9d8-c03ff4913bae",
+  "displayName": "DoMeServicePrincipal",
+  "password": *****,
+  "tenant": "7d6f97d6-d755-4c10-b763-409cc4b6638f"
+}
+
+
