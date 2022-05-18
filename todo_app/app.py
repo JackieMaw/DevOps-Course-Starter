@@ -28,8 +28,10 @@ def create_app():
 
     app.config.from_object('todo_app.flask_config.Config')
 
-    if os.getenv('LOGGLY_TOKEN') is not None:
-        handler = HTTPSHandler(f'https://logs-01.loggly.com/inputs/{os.getenv("LOGGLY_TOKEN")}/tag/todo-app')
+    loggly_token = os.getenv("LOGGLY_TOKEN")
+    app.logger.info(f"LOGGLY_TOKEN: {loggly_token}")
+    if loggly_token is not None:
+        handler = HTTPSHandler(f'https://logs-01.loggly.com/inputs/{loggly_token}/tag/todo-app')
         handler.setFormatter(Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s"))
         app.logger.addHandler(handler)
 
