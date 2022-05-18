@@ -19,17 +19,11 @@ def init_repository(logger):
 
 def create_app(): 
 
-    app = Flask(__name__)
-    logging.basicConfig(filename='todo_app\\app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
+    app = Flask(__name__)    
 
     app.config.from_object('todo_app.flask_config.Config')
 
     loggly_token = os.getenv("LOGGLY_TOKEN")
-    app.logger.info(f"LOGGLY_TOKEN: {loggly_token}")
     if loggly_token is not None:
         handler = HTTPSHandler(f'https://logs-01.loggly.com/inputs/{loggly_token}/tag/todo-app')
         handler.setFormatter(Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s"))
