@@ -28,6 +28,7 @@ def create_app():
 
     loggly_token = os.getenv("LOGGLY_TOKEN")
     if loggly_token is not None:
+        app.logger.info(f"Logs will be sent to loggly.")
         handler = HTTPSHandler(f'https://logs-01.loggly.com/inputs/{loggly_token}/tag/do-me')
         handler.setFormatter(Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s"))
         app.logger.addHandler(handler)
