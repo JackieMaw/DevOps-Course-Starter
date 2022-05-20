@@ -204,11 +204,6 @@ To get the webhook:
 az webapp deployment container config -n jackiemaw-do-me -g CreditSuisse21_JacquelineUngerer_ProjectExercise -e true
 ```
 
-# Trouble-shooting
-
-View application logs here:
-        https://jackiemaw-do-me.scm.azurewebsites.net/api/logstream
-
 ## OAuth with GitHub
 
 When you first access the application, it will request User Authentication from GitHub. 
@@ -238,3 +233,12 @@ PRODUCTION AZURE - Deployed by Terraform
 https://github.com/settings/applications/1894886	
 	http://jackiemaw-do-me-now.azurewebsites.net/
 	http://jackiemaw-do-me-now.azurewebsites.net/login/callback
+
+# Logging
+
+View recent application logs here from Azure here:
+        https://jackiemaw-do-me.scm.azurewebsites.net/api/logstream
+
+## Loggly
+
+If you have a Loggly account, you can set LOGGLY_TOKEN as an environment variable and then the logs will be sent to Loggly.
