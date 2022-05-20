@@ -23,6 +23,9 @@ def create_app():
 
     app.config.from_object('todo_app.flask_config.Config')
 
+    log_level = os.environ.get('LOG_LEVEL', 'INFO')
+    app.logger.setLevel(log_level)
+
     loggly_token = os.getenv("LOGGLY_TOKEN")
     if loggly_token is not None:
         handler = HTTPSHandler(f'https://logs-01.loggly.com/inputs/{loggly_token}/tag/do-me')
