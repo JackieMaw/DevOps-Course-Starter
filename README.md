@@ -227,7 +227,7 @@ https://github.com/settings/applications/1847131
 PRODUCTION AZURE
 https://github.com/settings/applications/1857732
         https://jackiemaw-do-me.azurewebsites.net/
-        https://jackiemaw-do-me.azurewebsites.net//login/callback
+        https://jackiemaw-do-me.azurewebsites.net/login/callback
 
 PRODUCTION AZURE - Deployed by Terraform
 https://github.com/settings/applications/1894886	
