@@ -82,7 +82,7 @@ def create_app():
         try:            
             app.logger.info(f"Authentication Step 1) Completed.")
             auth_code = request.args["code"]            
-            app.logger.info(f"GitHub Authorization Code: {auth_code}")
+            app.logger.debug(f"GitHub Authorization Code: {auth_code}")
 
             # exchange the authorization code for an access token
             payload = {"client_id": client_id, "client_secret": client_secret, "code": auth_code}
@@ -90,7 +90,8 @@ def create_app():
             app.logger.info(f"Authentication Step 2) Exchange GitHub Authorization Code for Access Token")
             app.logger.info(f"POST: https://github.com/login/oauth/access_token")
             r = requests.post("https://github.com/login/oauth/access_token", data = payload, headers = headers)
-            app.logger.info(f"Authentication Step 2) Complete. Response: {r.text}")
+            app.logger.info(f"Authentication Step 2) Complete.")
+            app.logger.debug(f"Response: {r.text}")
 
             if "access_token" not in r.json():
                 return "Authentication Failed at Step 2. See application logs.", 401
@@ -102,7 +103,8 @@ def create_app():
             app.logger.info(f"GET: https://api.github.com/user")
             headers = {"Accept": "application/json", "Authorization": f"Bearer {access_token}"}
             r = requests.get("https://api.github.com/user", headers = headers)
-            app.logger.info(f"Authentication Step 3) Complete. Response: {r.text}")
+            app.logger.info(f"Authentication Step 3) Complete.")
+            app.logger.debug(f"Response: {r.text}")
             
             if "login" not in r.json():
                 return "Authentication Failed at Step 3. See application logs.", 401
