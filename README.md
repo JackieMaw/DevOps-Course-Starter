@@ -203,9 +203,7 @@ To get the webhook:
 ```powershell
 az webapp deployment container config -n jackiemaw-do-me -g CreditSuisse21_JacquelineUngerer_ProjectExercise -e true
 ```
-
-
-
+  
 ## OAuth with GitHub
 
 When you first access the application, it will request User Authentication from GitHub. 
@@ -228,13 +226,22 @@ https://github.com/settings/applications/1847131
 
 PRODUCTION AZURE
 https://github.com/settings/applications/1857732
-        http://jackieu-todoapp.azurewebsites.net/
-        http://jackieu-todoapp.azurewebsites.net/login/callback
+        https://jackiemaw-do-me.azurewebsites.net/
+        https://jackiemaw-do-me.azurewebsites.net/login/callback
 
 PRODUCTION AZURE - Deployed by Terraform
 https://github.com/settings/applications/1894886	
 	http://jackiemaw-do-me-now.azurewebsites.net/
 	http://jackiemaw-do-me-now.azurewebsites.net/login/callback
+
+# Logging
+
+View recent application logs here from Azure here:
+        https://jackiemaw-do-me.scm.azurewebsites.net/api/logstream
+
+## Loggly
+
+If you have a Loggly account, you can set LOGGLY_TOKEN as an environment variable and then the logs will be sent to Loggly.
 	
 # Production Deployment on Azure
 
@@ -266,4 +273,3 @@ The output includes credentials that you must protect. Be sure that you do not i
   "password": *****,
   "tenant": "7d6f97d6-d755-4c10-b763-409cc4b6638f"
 }
-
