@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: todo-app
-          image: todo-app:prod
+          image: jackiemaw/do-me:latest
           imagePullPolicy: Never
           ports:
           - containerPort: 80

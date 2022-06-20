@@ -13,9 +13,8 @@ spec:
         app: module-14
     spec:
       containers:
-        - name: todo-app
-          image: todo-app:prod
-          imagePullPolicy: Never
+        - name: do-me
+          image: jackiemaw/do-me:latest
           ports:
           - containerPort: 80
           env:
