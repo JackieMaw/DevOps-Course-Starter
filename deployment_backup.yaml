@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: module-14
+spec:
+  selector:
+    matchLabels:
+      app: module-14
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: module-14
+    spec:
+      containers:
+        - name: todo-app
+          image: todo-app:prod
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 80
+          env:
+            - name: MONGODB_DATABASE
+              value: "doMeDatabase"
+            - name: MONGODB_CONNECTIONSTRING
+              valueFrom:
+                  secretKeyRef:
+                    name: secrets
+                    key: db_connectionstring
+                    optional: false
+            - name: CLIENT_ID
+              value: "Iv1.17399bdf0f013e8c"
+            - name: CLIENT_SECRET
+              valueFrom:
+                  secretKeyRef:
+                    name: secrets
+                    key: client_secret
+                    optional: false

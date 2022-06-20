@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: module-14
+spec:
+  selector:
+    matchLabels:
+      app: module-14
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: module-14
+    spec:
+      containers:
+        - name: todo-app
+          image: todo-app:prod
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 80
+          env:
+            - name: MONGODB_DATABASE
+              value: "doMeDatabase"
+            - name: MONGODB_CONNECTIONSTRING
+              value: "mongodb+srv://jmaw1:p12345@cluster0.5vzof.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+            - name: CLIENT_ID
+              value: "Iv1.17399bdf0f013e8c"
+            - name: CLIENT_SECRET
+              value: "f8fc05f9b7a476023c4b6552acea00b6139f4c6e"
