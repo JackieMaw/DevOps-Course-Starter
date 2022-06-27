@@ -18,6 +18,8 @@ spec:
           ports:
           - containerPort: 80
           env:
+            - name: PORT
+              value: "80"
             - name: MONGODB_DATABASE
               value: "doMeDatabase"
             - name: MONGODB_CONNECTIONSTRING
@@ -26,3 +28,6 @@ spec:
               value: "Iv1.17399bdf0f013e8c"
             - name: CLIENT_SECRET
               value: "f8fc05f9b7a476023c4b6552acea00b6139f4c6e"
+            - name: SECRET_KEY
+              value: "NotSureWhyWeNeedThis"
+              
