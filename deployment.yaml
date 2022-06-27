@@ -23,11 +23,23 @@ spec:
             - name: MONGODB_DATABASE
               value: "doMeDatabase"
             - name: MONGODB_CONNECTIONSTRING
-              value: "mongodb+srv://jmaw1:p12345@cluster0.5vzof.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+              valueFrom:
+                  secretKeyRef:
+                    name: secrets
+                    key: db_connectionstring
+                    optional: false
             - name: CLIENT_ID
               value: "Iv1.17399bdf0f013e8c"
             - name: CLIENT_SECRET
-              value: "f8fc05f9b7a476023c4b6552acea00b6139f4c6e"
+              valueFrom:
+                  secretKeyRef:
+                    name: secrets
+                    key: client_secret
+                    optional: false
             - name: SECRET_KEY
-              value: "NotSureWhyWeNeedThis"
+              valueFrom:
+                  secretKeyRef:
+                    name: secrets
+                    key: flask_secret
+                    optional: false
               
