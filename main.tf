@@ -99,7 +99,7 @@ resource "azurerm_app_service" "main" {
   app_settings = {
     "DOCKER_REGISTRY_SERVER_URL" = "https://index.docker.io"
     "FLASK_APP"                  = "todo_app/app."
-    "SECRET_KEY"                 = "AzureSecretKey"
+    "SECRET_KEY"                 = var.FLASK_SECRET_KEY
     "CLIENT_ID"                  = var.CLIENT_ID
     "CLIENT_SECRET"              = var.CLIENT_SECRET
     "MONGODB_CONNECTIONSTRING"   = azurerm_cosmosdb_account.main.connection_strings[0]
