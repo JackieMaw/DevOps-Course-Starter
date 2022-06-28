@@ -34,6 +34,8 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change).
 
+# Data
+
 ## Storing Data on MongoDb
 
 The application stores the tasks on MongoDb:
@@ -62,6 +64,7 @@ Set the following values in the .env file:
 
 pymongo.errors.OperationFailure: Retryable writes are not supported. Please disable retryable writes by specifying "retrywrites=false" in the connection string or an equivalent driver specific config., full error: {'ok': 0.0, 'errmsg': 'Retryable writes are not supported. Please disable retryable writes by specifying "retrywrites=false" in the connection string or an equivalent driver specific config.', 'code': 2, 'codeName': 'BadValue'}
 
+# Running the App
 
 ## Running the App with Flask
 
@@ -88,6 +91,8 @@ Once the all dependencies have been installed, launch from gunicorn within the p
 ```bash
 $ poetry run gunicorn --bind 0.0.0.0:5000 todo_app.app:create_app
 ```
+
+# Automated Tests
 
 ## Setting up the Tests
 
@@ -118,6 +123,7 @@ Troubleshooting note - if you get this error:
         ERROR todo_app/tests_e2e/test_integration_e2e_selenium.py::test_task_journey - selenium.common.exceptions.WebDriverException: Message: 'geckodriver' executable needs to be in PATcf4&token=946719d7da9b126dd37539a72e97f92c1298f73cbb70a0eb3H.
 Copy geckodriver.exe into the root of your project
 
+# Deployment
 
 ## Launch within a Virtual Machine
 
@@ -151,7 +157,7 @@ $ docker run --env-file ./.env -it --publish 5000:5000 --mount type=bind,source=
 $ docker run --env-file ./.env -it --publish 5000:5000 do-me:prod
 ```
  
-## Deployed to Heroku
+## Deploying to Heroku
 
 The application will be automatically deployed to Heroku by GitHub Actions:
 
@@ -172,7 +178,7 @@ $ heroku container:release -a jackiemaw-do-me web
 All secrets must be setup on Heroku as "Config Vars":
 https://dashboard.heroku.com/apps/jackiemaw-do-me/settings
 
-## Deployed to Azure
+## Deploying to Azure
 
 The application will be automatically deployed to Azure by GitHub Actions:
         http://jackiemaw-do-me.azurewebsites.net/
@@ -203,7 +209,44 @@ To get the webhook:
 ```powershell
 az webapp deployment container config -n jackiemaw-do-me -g CreditSuisse21_JacquelineUngerer_ProjectExercise -e true
 ```
-  
+### Trouble-shooting
+
+View application logs here:
+        https://jackiemaw-do-me.scm.azurewebsites.net/api/logstream
+
+## Deploying with Kubernetes
+
+You can deploy the application manually to Kubernetes:
+
+```powershell
+minikube start
+
+kubectl create secret generic secrets --from-literal=db_connectionstring='<mongodb connection string>'   --from-literal=client_secret='<github client secret>' --from-literal=flask_secret='<flask session secret>'
+
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+kubectl port-forward service/module-14 7080:80 4
+```
+
+For troubleshooting, you can look at the status of your pods and view the logs and events:
+
+```powershell
+kubectl get pods
+kubectl logs module-14-7cb9b4d97d-ct5gf
+kubectl get events --sort-by=.metadata.creationTimestamp
+```
+
+To cleanup your pods and shut down:
+
+```powershell
+kubectl delete --all services
+kubectl delete --all deployments
+kubectl delete --all pod
+minikube stop
+```
+
+# Authentication & Authorization
+
 ## OAuth with GitHub
 
 When you first access the application, it will request User Authentication from GitHub. 
